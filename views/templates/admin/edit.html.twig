@@ -1,0 +1,38 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% block content %}
+    <section class="row justify-content-center">
+        <section class="col-xl-10">
+            <section class="card">
+                <header class="card-header">
+                    <h3 class="d-inline-block card-header-title">
+                        <i class="material-icons">
+                            {{ form.vars.data.id is not defined ? ' add_circle_outline' : 'edit' }}
+                        </i>
+                        {{ (form.vars.data.id is not defined ? 'New' : 'Edit') ~ ' Video Block' | trans({}, 'Modules.Advideoblock.Admin') }}
+                    </h3>
+                </header>
+                {{ form_start(form) }}
+                    <article class="card-block row">
+                        <div class="card-text">
+                            {{ form_row(form.id_category) }}
+                            {{ form_row(form.block_title) }}
+                            {{ form_row(form.block_subtitle) }}
+                            {{ form_row(form.video_path) }}
+                            {{ form_row(form.video_title) }}
+                            {{ form_row(form.video_options) }}
+                            {{ form_row(form.video_fullscreen) }}
+                        </div>
+                    </article>
+                    <footer class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url('admin_ad_videoblock_index') }}"
+                               class="btn btn-secondary">{{ 'Cancel' | trans({}, 'Modules.Advideoblock.Admin') }}</a>
+                            <button class="btn btn-primary">{{ 'Save' | trans({}, 'Modules.Advideoblock.Admin') }}</button>
+                        </div>
+                    </footer>
+                {{ form_end(form) }}
+            </section>
+        </section>
+    </section>
+{% endblock %}

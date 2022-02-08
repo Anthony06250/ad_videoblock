@@ -1,0 +1,16 @@
+{
+  "name": "ad/videoblock",
+  "license": "AFL-3.0",
+  "autoload": {
+    "psr-4": {
+      "AdVideoBlock\\": "src/"
+    },
+    "classmap": [
+      "ad_videoblock.php"
+    ],
+    "config": {
+      "prepend-autoloader": false
+    },
+    "type": "prestashop-module"
+  }
+}

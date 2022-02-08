@@ -1,0 +1,18 @@
+{
+  "name": "ad/videoblock",
+  "license": "AFL-3.0",
+  "scripts": {
+    "build": "webpack --progress --mode=production",
+    "dev": "webpack --progress --watch --mode=development"
+  },
+  "devDependencies": {
+    "esbuild-loader": "^2.18.0",
+    "path": "^0.12.7",
+    "terser-webpack-plugin": "^5.3.1",
+    "ts-loader": "^9.2.6",
+    "uglify-save-license": "^0.4.1",
+    "webpack": "^5.68",
+    "webpack-cli": "^4.9.2",
+    "webpack-merge": "^5.8.0"
+  }
+}
