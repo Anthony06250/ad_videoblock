@@ -32,7 +32,7 @@ admin_ad_videoblock_edit:
 
 admin_ad_videoblock_delete:
   path: /{id}/delete
-  methods: [GET]
+  methods: [POST]
   defaults:
     _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::deleteAction'
     _legacy_controller: 'AdminVideoBlock'

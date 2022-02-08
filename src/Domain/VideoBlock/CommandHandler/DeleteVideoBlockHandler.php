@@ -18,9 +18,39 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
+declare(strict_types=1);
+
 namespace AdVideoBlock\Domain\VideoBlock\CommandHandler;
+
+use AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Exception\CannotDeleteVideoBlockException;
+use AdVideoBlock\Model\VideoBlock;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 
 class DeleteVideoBlockHandler
 {
+    /**
+     * @param DeleteVideoBlockCommand $command
+     * @throws CannotDeleteVideoBlockException
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function handle(DeleteVideoBlockCommand $command): void
+    {
+        $id = $command->getId()->getValue();
+        $videoblock = new VideoBlock($id);
 
+        try {
+            if (false === $videoblock->delete()) {
+                throw new CannotDeleteVideoBlockException(
+                    sprintf('Failed to delete videoblock with id "%s"', $videoblock->id)
+                );
+            }
+        } catch (PrestaShopException $exception) {
+            throw new CannotDeleteVideoBlockException(
+                'An unexpected error occurred when delete videoblock'
+            );
+        }
+    }
 }

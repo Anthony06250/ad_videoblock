@@ -22,13 +22,10 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Controller;
 
+use AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand;
 use AdVideoBlock\Grid\Factory\VideoBlockGridDefinitionFactory;
 use AdVideoBlock\Grid\Filters\VideoBlockFilters;
-use AdVideoBlock\Model\VideoBlock;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopDatabaseException;
-use PrestaShopException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,12 +39,10 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
      */
     public function indexAction(VideoBlockFilters $filters): Response
     {
-        $grid_factory = $this->get('advideoblock.grid.factory.videoblock_grid_factory');
-        $grid = $grid_factory->getGrid($filters);
+        $gridFactory = $this->get('advideoblock.grid.factory.videoblock_grid_factory');
+        $grid = $gridFactory->getGrid($filters);
 
-        return $this->render(
-            '@Modules/ad_videoblock/views/templates/admin/index.html.twig',
-            [
+        return $this->render('@Modules/ad_videoblock/views/templates/admin/index.html.twig', [
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
                 'grid' => $this->presentGrid($grid),
             ]
@@ -63,9 +58,8 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
     {
         $response = $this->get('prestashop.bundle.grid.response_builder');
 
-        return $response->buildSearchResponse(
-            $this->get('advideoblock.grid.factory.videoblock_grid_definition_factory'),
-                $request,
+        return $response->buildSearchResponse($this->get('advideoblock.grid.factory.videoblock_grid_definition_factory'),
+            $request,
             VideoBlockGridDefinitionFactory::GRID_ID,
             'admin_ad_videoblock_index'
         );
@@ -78,13 +72,13 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        $form_builder = $this->get('advideoblock.form.videoblock_form_builder');
-        $form = $form_builder->getForm();
+        $formBuilder = $this->get('advideoblock.form.videoblock_form_builder');
+        $form = $formBuilder->getForm();
 
         $form->handleRequest($request);
 
-        $form_handler = $this->get('advideoblock.form.videoblock_form_handler');
-        $result = $form_handler->handle($form);
+        $formHandler = $this->get('advideoblock.form.videoblock_form_handler');
+        $result = $formHandler->handle($form);
 
         if (null !== $result->getIdentifiableObjectId()) {
             $this->addFlash('success', $this->trans('Successful creation.', 'Modules.Advideoblock.Admin'));
@@ -106,13 +100,13 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
      */
     public function editAction(int $id, Request $request): Response
     {
-        $form_builder = $this->get('advideoblock.form.videoblock_form_builder');
-        $form = $form_builder->getFormFor($id);
+        $formBuilder = $this->get('advideoblock.form.videoblock_form_builder');
+        $form = $formBuilder->getFormFor($id);
 
         $form->handleRequest($request);
 
-        $form_handler = $this->get('advideoblock.form.videoblock_form_handler');
-        $result = $form_handler->handleFor($id, $form);
+        $formHandler = $this->get('advideoblock.form.videoblock_form_handler');
+        $result = $formHandler->handleFor($id, $form);
 
         if ($result->isSubmitted() && $result->isValid()) {
             $this->addFlash('success', $this->trans('Successful update.', 'Modules.Advideoblock.Admin'));
@@ -127,27 +121,33 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
      * @param int $id
      * @return RedirectResponse
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
      */
     public function deleteAction(int $id): RedirectResponse
     {
-        $videoblock = new VideoBlock($id);
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.delete_videoblock_handler');
 
-        $videoblock->delete();
+        $handler->handle(new DeleteVideoBlockCommand($id));
+        $this->addFlash('success', $this->trans('Video Block has been successfully deleted.', 'Modules.Advideoblock.Admin'));
 
         return $this->redirectToRoute('admin_ad_videoblock_index');
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
      * @param Request $request
      * @return RedirectResponse
      */
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $videoblockIds = $request->request->get('videoblock_bulk_action');
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.delete_videoblock_handler');
+
+        foreach ($videoblockIds as $id) {
+            $handler->handle(new DeleteVideoBlockCommand((int)$id));
+        }
 
         $this->addFlash('success', $this->trans('The selection has been successfully deleted.', 'Modules.Advideoblock.Admin'));
 

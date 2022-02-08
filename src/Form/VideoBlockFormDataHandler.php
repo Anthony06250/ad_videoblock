@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace AdVideoBlock\Form;
 
 use AdVideoBlock\Domain\VideoBlock\Command\CreateVideoBlockCommand;
-//use AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\EditVideoBlockCommand;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
+use PrestaShopException;
 
 final class VideoBlockFormDataHandler implements FormDataHandlerInterface
 {
@@ -46,7 +46,7 @@ final class VideoBlockFormDataHandler implements FormDataHandlerInterface
     /**
      * @param array $data
      * @return int
-     * @throws \PrestaShopException
+     * @throws PrestaShopException
      */
     public function create(array $data): int
     {
