@@ -23,15 +23,21 @@ declare(strict_types=1);
 namespace AdVideoBlock\Controller;
 
 use AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand;
 use AdVideoBlock\Grid\Factory\VideoBlockGridDefinitionFactory;
 use AdVideoBlock\Grid\Filters\VideoBlockFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class Ad_VideoBlockController extends FrameworkBundleAdminController
 {
+    /**
+     * -> TODO: Implement exceptions (try/catch) in controller
+     */
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      * @param VideoBlockFilters $filters
@@ -150,6 +156,21 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
         }
 
         $this->addFlash('success', $this->trans('The selection has been successfully deleted.', 'Modules.Advideoblock.Admin'));
+
+        return $this->redirectToRoute('admin_ad_videoblock_index');
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
+     * @param int $id
+     * @return RedirectResponse
+     */
+    public function toggleFullscreenAction(int $id): RedirectResponse
+    {
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.toggle_fullscreen_videoblock_handler');
+
+        $handler->handle(new ToggleFullscreenVideoBlockCommand($id));
+        $this->addFlash('success', $this->trans('The fullscreen option has been successfully updated.', 'Modules.Advideoblock.Admin'));
 
         return $this->redirectToRoute('admin_ad_videoblock_index');
     }

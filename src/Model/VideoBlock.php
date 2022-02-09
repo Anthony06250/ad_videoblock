@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Model;
 
-class VideoBlock extends \ObjectModel
+use ObjectModel;
+
+class VideoBlock extends ObjectModel
 {
     /**
      * @var int

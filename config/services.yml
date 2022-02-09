@@ -56,6 +56,12 @@ services:
           - name: tactician.handler
             command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand'
 
+  advideoblock.domain.videoblock.command_handler.toggle_fullscreen_videoblock_handler:
+      class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleFullscreenVideoBlockHandler'
+      tags:
+          - name: tactician.handler
+            command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand'
+
   advideoblock.grid.factory.videoblock_grid_definition_factory:
     class: 'AdVideoBlock\Grid\Factory\VideoBlockGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'

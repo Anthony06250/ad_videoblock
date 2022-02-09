@@ -24,6 +24,7 @@ $(document).ready(function () {
     grid.addExtension(new window.prestashop.component.GridExtensions.LinkRowActionExtension());
     grid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension());
     grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+    grid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
     grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
     grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
     grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());

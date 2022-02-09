@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Form;
 
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -30,6 +31,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class VideoBlockType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     * @return void
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('id_ad_videoblock', HiddenType::class)
@@ -69,11 +75,11 @@ class VideoBlockType extends AbstractType
                     "placeholder" => "The video options"
                 ]
             ])
-            ->add('video_fullscreen', NumberType::class, [
-                "attr" => [
-                    "label" => "Video fullscreen",
-                    "placeholder" => "The video fullscreen"
-                ]
+            ->add('video_fullscreen', SwitchType::class, [
+                'choices' => [
+                    'OFF' => false,
+                    'ON' => true
+                ],
             ]);
     }
 }

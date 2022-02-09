@@ -32,12 +32,14 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
+use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
@@ -102,11 +104,14 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'video_title',
                 ])
             )
-            ->add((new DataColumn('video_fullscreen'))
-                ->setName($this->trans('Video fullscreen', [], 'Modules.Advideoblock.Admin'))
-                ->setOptions([
-                    'field' => 'video_fullscreen',
-                ])
+            ->add((new ToggleColumn('video_fullscreen'))
+                    ->setName($this->trans('Video fullscreen', [], 'Modules.Advideoblock.Admin'))
+                    ->setOptions([
+                        'field' => 'video_fullscreen',
+                        'primary_field' => 'id_ad_videoblock',
+                        'route' => 'admin_ad_videoblock_toggle_fullscreen',
+                        'route_param_name' => 'id',
+                    ])
             )
             ->add((new ActionColumn('actions'))
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
@@ -142,8 +147,7 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getFilters()
     {
         return (new FilterCollection())
-            ->add(
-                (new Filter('id_ad_videoblock', TextType::class))
+            ->add((new Filter('id_ad_videoblock', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
@@ -152,8 +156,7 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('id_ad_videoblock')
             )
-            ->add(
-                (new Filter('id_category', TextType::class))
+            ->add((new Filter('id_category', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
@@ -162,8 +165,7 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('id_category')
             )
-            ->add(
-                (new Filter('block_title', TextType::class))
+            ->add((new Filter('block_title', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
@@ -172,8 +174,7 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('block_title')
             )
-            ->add(
-                (new Filter('video_path', TextType::class))
+            ->add((new Filter('video_path', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
@@ -182,8 +183,7 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('video_path')
             )
-            ->add(
-                (new Filter('video_title', TextType::class))
+            ->add((new Filter('video_title', TextType::class))
                     ->setTypeOptions([
                         'required' => false,
                         'attr' => [
@@ -192,18 +192,10 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('video_title')
             )
-            ->add(
-                (new Filter('video_fullscreen', TextType::class))
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Video fullscreen', [], 'Modules.Advideoblock.Admin'),
-                        ],
-                    ])
+            ->add((new Filter('video_fullscreen', YesAndNoChoiceType::class))
                     ->setAssociatedColumn('video_fullscreen')
             )
-            ->add(
-                (new Filter('actions', SearchAndResetType::class))
+            ->add((new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
                         'reset_route' => 'admin_common_reset_search_by_filter_id',
                         'reset_route_params' => [

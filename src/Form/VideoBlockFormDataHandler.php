@@ -51,6 +51,7 @@ final class VideoBlockFormDataHandler implements FormDataHandlerInterface
     public function create(array $data): int
     {
         $command = new CreateVideoBlockCommand();
+        $data['video_fullscreen'] = $data['video_fullscreen'] ? 1 : 0;
         $videoblock = $this->command_bus->handle($command->fromArray($data));
 
         return $videoblock->getValue();
