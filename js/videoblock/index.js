@@ -37,4 +37,3 @@ $(document).ready(function () {
     grid.addExtension(new window.prestashop.component.GridExtensions.SubmitGridActionExtension());
     grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
 });
-

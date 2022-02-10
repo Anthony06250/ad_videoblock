@@ -39,7 +39,7 @@ class DeleteBulkVideoBlockHandler
      */
     public function handle(DeleteBulkVideoBlockCommand $command): void
     {
-        $videoblockIds = $command->getId();
+        $videoblockIds = $command->getId()->getValue();
         $videoblock = new VideoBlock();
 
         try {

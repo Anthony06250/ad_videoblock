@@ -61,22 +61,6 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request): RedirectResponse
-    {
-        $response = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $response->buildSearchResponse($this->get('advideoblock.grid.factory.videoblock_grid_definition_factory'),
-            $request,
-            VideoBlockGridDefinitionFactory::GRID_ID,
-            'admin_ad_videoblock_index'
-        );
-    }
-
-    /**
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="Access denied.")
      * @param Request $request
      * @return Response

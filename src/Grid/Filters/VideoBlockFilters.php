@@ -28,6 +28,10 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 class VideoBlockFilters extends Filters
 {
     /**
+     * -> TODO: Filter not apply... WHY ???
+     */
+
+    /**
      * @var string
      */
     protected $filterId = VideoBlockGridDefinitionFactory::GRID_ID;
@@ -38,9 +42,9 @@ class VideoBlockFilters extends Filters
     public static function getDefaults(): array
     {
         return [
-            'limit' => 10,
+            'limit' => 5,
             'offset' => 0,
-            'orderBy' => 'id_ad_videoblock',
+            'orderBy' => 'id',
             'sortOrder' => 'asc',
             'filters' => [],
         ];

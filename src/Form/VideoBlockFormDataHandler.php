@@ -65,6 +65,7 @@ final class VideoBlockFormDataHandler implements FormDataHandlerInterface
      * @param $id
      * @param array $data
      * @return void
+     * @throws PrestaShopException
      */
     public function update($id, array $data): void
     {

@@ -2,7 +2,8 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        index: './videoblock'
+        index: './videoblock/index.js',
+        edit: './videoblock/edit.js'
     },
     output: {
         path: path.resolve(__dirname, '../../views/js'),

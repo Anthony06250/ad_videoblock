@@ -22,15 +22,20 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Form;
 
+use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class VideoBlockType extends AbstractType
 {
+    /**
+     * -> TODO: Rebuild layout form with validation and trans label
+     * -> TODO: Use constraints for check entered data
+     */
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -39,37 +44,43 @@ class VideoBlockType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('id_ad_videoblock', HiddenType::class)
-            ->add('id_category', NumberType::class, [
-                "attr" => [
-                    "label" => "Category ID",
-                    "placeholder" => "The category id"
-                ]
+            ->add('id_category', CategoryChoiceTreeType::class, [
+                "label" => "Category",
+                'disabled_values' => [0],
+                'required' => true
             ])
             ->add('block_title', TextType::class, [
+                'required' => false,
                 "attr" => [
                     "label" => "Block title",
                     "placeholder" => "The block title"
                 ]
             ])
             ->add('block_subtitle', TextType::class, [
+                'required' => false,
                 "attr" => [
                     "label" => "Block subtitle",
                     "placeholder" => "The block subtitle"
                 ]
             ])
             ->add('video_path', TextType::class, [
+                'constraints' => [
+                    new \Symfony\Component\Validator\Constraints\Url(),
+                ],
                 "attr" => [
                     "label" => "Video path",
                     "placeholder" => "The video path"
                 ]
             ])
             ->add('video_title', TextType::class, [
+                'required' => false,
                 "attr" => [
                     "label" => "Video title",
                     "placeholder" => "The video title"
                 ]
             ])
             ->add('video_options', TextType::class, [
+                'required' => false,
                 "attr" => [
                     "label" => "Video options",
                     "placeholder" => "The video options"

@@ -71,7 +71,13 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add((new BulkActionColumn('bulk_action'))
                 ->setName('')
                 ->setOptions([
-                    'bulk_field' => 'id_ad_videoblock',
+                    'bulk_field' => 'id',
+                ])
+            )
+            ->add((new DataColumn('id'))
+                ->setName($this->trans('ID', [], 'Modules.Advideoblock.Admin'))
+                ->setOptions([
+                    'field' => 'id',
                 ])
             )
             ->add((new ImageColumn('video_path'))
@@ -98,17 +104,17 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'field' => 'video_title',
                 ])
             )
-            ->add((new DataColumn('id_category'))
+            ->add((new DataColumn('category'))
                 ->setName($this->trans('Category', [], 'Modules.Advideoblock.Admin'))
                 ->setOptions([
-                    'field' => 'id_category',
+                    'field' => 'category',
                 ])
             )
             ->add((new ToggleColumn('video_fullscreen'))
                     ->setName($this->trans('Fullscreen', [], 'Modules.Advideoblock.Admin'))
                     ->setOptions([
                         'field' => 'video_fullscreen',
-                        'primary_field' => 'id_ad_videoblock',
+                        'primary_field' => 'id',
                         'route' => 'admin_ad_videoblock_toggle_fullscreen',
                         'route_param_name' => 'id',
                     ])
@@ -117,7 +123,7 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Active', [], 'Modules.Advideoblock.Admin'))
                     ->setOptions([
                         'field' => 'active',
-                        'primary_field' => 'id_ad_videoblock',
+                        'primary_field' => 'id',
                         'route' => 'admin_ad_videoblock_toggle_status',
                         'route_param_name' => 'id',
                     ])
@@ -132,7 +138,7 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                                     ->setOptions([
                                         'route' => 'admin_ad_videoblock_edit',
                                         'route_param_name' => 'id',
-                                        'route_param_field' => 'id_ad_videoblock',
+                                        'route_param_field' => 'id',
                                         'clickable_row' => true,
                                     ])
                             )
@@ -143,7 +149,7 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                                         'confirm_message' => $this->trans('Delete selected item ?', [], 'Modules.Advideoblock.Admin'),
                                         'route' => 'admin_ad_videoblock_delete',
                                         'route_param_name' => 'id',
-                                        'route_param_field' => 'id_ad_videoblock',
+                                        'route_param_field' => 'id',
                                     ])
                             )
                     ])
@@ -183,14 +189,14 @@ class VideoBlockGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                 ->setAssociatedColumn('video_title')
             )
-            ->add((new Filter('id_category', TextType::class))
+            ->add((new Filter('category', TextType::class))
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => [
                         'placeholder' => $this->trans('Category', [], 'Modules.Advideoblock.Admin'),
                     ],
                 ])
-                ->setAssociatedColumn('id_category')
+                ->setAssociatedColumn('category')
             )
             ->add((new Filter('video_fullscreen', YesAndNoChoiceType::class))
                     ->setAssociatedColumn('video_fullscreen')

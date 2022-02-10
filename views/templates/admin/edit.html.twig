@@ -37,3 +37,10 @@
         </section>
     </section>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('/modules/ad_videoblock/views/js/edit.bundle.js') }}"></script>
+{% endblock %}
+

@@ -31,15 +31,6 @@ use Validate;
 class VideoBlock extends ObjectModel
 {
     /**
-     * -> TODO: See for delete $id_ad_videoblock and use instead $this->id inherit by parent
-     */
-
-    /**
-     * @var int
-     */
-    public $id_ad_videoblock;
-
-    /**
      * @var int
      */
     public $id_category;
@@ -103,7 +94,6 @@ class VideoBlock extends ObjectModel
     public function toArray(): array
     {
         return [
-            'id_ad_videoblock' => $this->id_ad_videoblock,
             'id_category' => $this->id_category,
             'block_title' => $this->block_title,
             'block_subtitle' => $this->block_subtitle,
@@ -121,15 +111,16 @@ class VideoBlock extends ObjectModel
      */
     public function toggleFullscreen()
     {
-        if (!Validate::isTableOrIdentifier(VideoBlock::$definition['primary']) OR !Validate::isTableOrIdentifier(VideoBlock::$definition['table'])) {
+        if (!Validate::isTableOrIdentifier(VideoBlock::$definition['primary'])
+            || !Validate::isTableOrIdentifier(VideoBlock::$definition['table'])) {
             die(Tools::displayError());
         } else if (!key_exists('video_fullscreen', (array)$this)) {
             die(Tools::displayError());
         }
 
         return Db::getInstance()->Execute('
-		    UPDATE `'.pSQL(_DB_PREFIX_.$this->table).'`
+		    UPDATE `' . pSQL(_DB_PREFIX_ . VideoBlock::$definition['table']) . '`
 		    SET `video_fullscreen` = !`video_fullscreen`
-		    WHERE `'.pSQL(VideoBlock::$definition['primary']).'` = ' . intval($this->id));
+		    WHERE `' . pSQL(VideoBlock::$definition['primary']) . '` = ' . intval($this->id));
     }
 }

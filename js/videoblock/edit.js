@@ -1,4 +1,3 @@
-<?php
 /*
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -18,30 +17,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-declare(strict_types=1);
-
-namespace AdVideoBlock\Domain\VideoBlock\ValueObject;
-
-class VideoBlockId
-{
-    /**
-     * @var mixed
-     */
-    private $id_videoblock;
-
-    /**
-     * @param mixed $id_videoblock
-     */
-    public function __construct($id_videoblock)
-    {
-        $this->id_videoblock = $id_videoblock;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->id_videoblock;
-    }
-}
+$(document).ready(function () {
+    new window.prestashop.component.ChoiceTree('#video_block_id_category');
+});

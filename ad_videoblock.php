@@ -30,6 +30,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 class Ad_VideoBlock extends Module
 {
+    /**
+     * -> TODO: Made multiple language
+     */
 
     public function __construct()
     {

@@ -7,12 +7,14 @@ admin_ad_videoblock_index:
     _legacy_link: 'AdminVideoBlock'
 
 admin_ad_videoblock_search:
-  path: /
-  methods: [POST]
-  defaults:
-    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::searchAction'
-    _legacy_controller: 'AdminVideoBlock'
-    _legacy_link: 'AdminVideoBlock:search'
+    path: /
+    methods: [POST]
+    defaults:
+        _controller: PrestaShopBundle:Admin\Common:searchGrid
+        gridDefinitionFactoryServiceId: advideoblock.grid.factory.videoblock_grid_definition_factory
+        redirectRoute: admin_ad_videoblock_index
+        _legacy_controller: 'AdminVideoBlock'
+        _legacy_link: 'AdminVideoBlock:search'
 
 admin_ad_videoblock_create:
   path: /new

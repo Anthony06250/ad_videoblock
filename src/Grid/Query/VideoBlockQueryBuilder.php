@@ -31,11 +31,6 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
-     * -> TODO: Make Join on query for get category name
-     * -> TODO: See for use contextLanguage and contextShop
-     */
-
-    /**
      * @var int
      */
     private $contextLanguageId;
@@ -76,14 +71,15 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $query = $this->getQueryBuilder($searchCriteria->getFilters());
 
-        $qb->select('p.`id_ad_videoblock`, p.`id_category`, p.`block_title`, p.`video_path`, p.`video_title`, p.`block_subtitle`,p.`video_fullscreen`, p.`active`');
+        $query->select('p.`id_ad_videoblock` AS `id`, p.`block_title`, p.`video_path`, p.`video_title`, p.`block_subtitle`,p.`video_fullscreen`, p.`active`')
+            ->addSelect('pl.`name` AS `category`');
         $this->searchCriteriaApplicator
-            ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb);
+            ->applyPagination($searchCriteria, $query)
+            ->applySorting($searchCriteria, $query);
 
-        return $qb;
+        return $query;
     }
 
     /**
@@ -92,10 +88,10 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(p.`id_ad_videoblock`)');
+        $query = $this->getQueryBuilder($searchCriteria->getFilters());
+        $query->select('COUNT(p.`id_ad_videoblock`)');
 
-        return $qb;
+        return $query;
     }
 
     /**
@@ -104,55 +100,69 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function getQueryBuilder(array $filters): QueryBuilder
     {
-        $qb = $this->connection
+        $query = $this->connection
             ->createQueryBuilder()
-            ->from($this->dbPrefix . 'ad_videoblock', 'p');
-
+            ->from($this->dbPrefix . 'ad_videoblock', 'p')
+            ->innerJoin(
+                'p',
+                $this->dbPrefix . 'category_shop',
+                'ps',
+                'ps.`id_category` = p.`id_category` AND ps.`id_shop` = :id_shop'
+            )
+            ->leftJoin(
+                'p',
+                $this->dbPrefix . 'category_lang',
+                'pl',
+                'pl.`id_category` = p.`id_category` AND pl.`id_lang` = :id_lang AND pl.`id_shop` = :id_shop'
+            )
+            ->setParameter('id_lang', $this->contextLanguageId)
+            ->setParameter('id_shop', $this->contextShopId);
 
         foreach ($filters as $filterName => $filter) {
-            if ('id_category' === $filterName) {
-                $qb->andWhere('p.`id_category` = :id_category');
-                $qb->setParameter('id_category', $filter);
+            dump($filter);
+            if ('category' === $filterName) {
+                $query->andWhere('pl.`name` LIKE :category');
+                $query->setParameter('category', '%' . $filter . '%');
 
                 continue;
             }
 
             if ('block_title' === $filterName) {
-                $qb->andWhere('p.`block_title` LIKE :block_title');
-                $qb->setParameter('block_title', '%' . $filter . '%');
+                $query->andWhere('p.`block_title` LIKE :block_title');
+                $query->setParameter('block_title', '%' . $filter . '%');
 
                 continue;
             }
 
             if ('block_subtitle' === $filterName) {
-                $qb->andWhere('p.`block_subtitle` LIKE :block_subtitle');
-                $qb->setParameter('block_subtitle', '%' . $filter . '%');
+                $query->andWhere('p.`block_subtitle` LIKE :block_subtitle');
+                $query->setParameter('block_subtitle', '%' . $filter . '%');
 
                 continue;
             }
 
             if ('video_title' === $filterName) {
-                $qb->andWhere('p.`video_title` LIKE :video_title');
-                $qb->setParameter('video_title', '%' . $filter . '%');
+                $query->andWhere('p.`video_title` LIKE :video_title');
+                $query->setParameter('video_title', '%' . $filter . '%');
 
                 continue;
             }
 
             if ('video_fullscreen' === $filterName) {
-                $qb->andWhere('p.`video_fullscreen` LIKE :video_fullscreen');
-                $qb->setParameter('video_fullscreen', '%' . $filter . '%');
+                $query->andWhere('p.`video_fullscreen` LIKE :video_fullscreen');
+                $query->setParameter('video_fullscreen', '%' . $filter . '%');
 
                 continue;
             }
 
             if ('active' === $filterName) {
-                $qb->andWhere('p.`active` LIKE :active');
-                $qb->setParameter('active', '%' . $filter . '%');
+                $query->andWhere('p.`active` LIKE :active');
+                $query->setParameter('active', '%' . $filter . '%');
 
                 continue;
             }
         }
 
-        return $qb;
+        return $query;
     }
 }
