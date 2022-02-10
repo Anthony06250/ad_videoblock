@@ -22,35 +22,35 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\CommandHandler;
 
-use AdVideoBlock\Domain\VideoBlock\Command\EditVideoBlockCommand;
-use AdVideoBlock\Domain\VideoBlock\Exception\CannotEditVideoBlockException;
+use AdVideoBlock\Domain\VideoBlock\Command\ToggleStatusVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Exception\CannotToggleStatusVideoBlockException;
 use AdVideoBlock\Model\VideoBlock;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 
-class EditVideoBlockHandler extends AbstractVideoBlockHandler
+class ToggleStatusVideoBlockHandler
 {
     /**
-     * @param EditVideoBlockCommand $command
+     * @param ToggleStatusVideoBlockCommand $command
      * @return void
-     * @throws CannotEditVideoBlockException
+     * @throws CannotToggleStatusVideoBlockException
      * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
      */
-    public function handle(EditVideoBlockCommand $command): void
+    public function handle(ToggleStatusVideoBlockCommand $command): void
     {
         $id = $command->getId()->getValue();
         $videoblock = new VideoBlock($id);
 
-        $videoblock->hydrate($command->toArray());
-
         try {
-            if (false === $videoblock->update()) {
-                throw new CannotEditVideoBlockException(
-                    sprintf('Failed to update videoblock with id "%s"', $videoblock->id)
+            if (false === $videoblock->toggleStatus()) {
+                throw new CannotToggleStatusVideoBlockException(
+                    sprintf('Failed to toggle status for videoblock with id "%s"', $videoblock->id)
                 );
             }
         } catch (PrestaShopException $exception) {
-            throw new CannotEditVideoBlockException(
-                'An unexpected error occurred when updating videoblock'
+            throw new CannotToggleStatusVideoBlockException(
+                'An unexpected error occurred when toggle status of videoblock'
             );
         }
     }

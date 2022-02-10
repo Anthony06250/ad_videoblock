@@ -25,24 +25,11 @@ namespace AdVideoBlock\Domain\VideoBlock\CommandHandler;
 use AdVideoBlock\Domain\VideoBlock\Command\CreateVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Exception\CannotCreateVideoBlockException;
 use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
-use AdVideoBlock\Repository\VideoBlockRepository;
+use AdVideoBlock\Model\VideoBlock;
 use PrestaShopException;
 
 class CreateVideoBlockHandler extends AbstractVideoBlockHandler
 {
-    /**
-     * @var VideoBlockRepository
-     */
-    private $repository;
-
-    /**
-     * @param VideoBlockRepository $repository
-     */
-    public function __construct(VideoBlockRepository $repository)
-    {
-        $this->repository = $repository;
-    }
-
     /**
      * @param CreateVideoBlockCommand $command
      * @return VideoBlockId
@@ -50,14 +37,12 @@ class CreateVideoBlockHandler extends AbstractVideoBlockHandler
      */
     public function handle(CreateVideoBlockCommand $command): VideoBlockId
     {
-        $id = $this->repository->findLastId() + 1;
-        $videoblock = $this->createVideoBlock($id);
+        $videoblock = new VideoBlock();
 
-        $videoblock->fromArray($command->toArray());
-        $videoblock->id_ad_videoblock = $id;
+        $videoblock->hydrate($command->toArray());
 
         try {
-            if (false === $videoblock->update()) {
+            if (false === $videoblock->add()) {
                 throw new CannotCreateVideoBlockException(
                     sprintf('Failed to create videoblock with id "%s"', $videoblock->id)
                 );
@@ -67,6 +52,7 @@ class CreateVideoBlockHandler extends AbstractVideoBlockHandler
                 'An unexpected error occurred when create videoblock'
             );
         }
-        return new VideoBlockId($id);
+
+        return new VideoBlockId((int)$videoblock->id);
     }
 }

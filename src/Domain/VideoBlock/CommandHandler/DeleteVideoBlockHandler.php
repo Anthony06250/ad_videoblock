@@ -32,6 +32,7 @@ class DeleteVideoBlockHandler
 {
     /**
      * @param DeleteVideoBlockCommand $command
+     * @return void
      * @throws CannotDeleteVideoBlockException
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException

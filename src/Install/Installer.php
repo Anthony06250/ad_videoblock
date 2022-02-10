@@ -95,6 +95,7 @@ class Installer
                `video_title` varchar(255) DEFAULT NULL,
                `video_options` varchar(255) DEFAULT NULL,
                `video_fullscreen` int(2) UNSIGNED NOT NULL,
+               `active` int(2) UNSIGNED NOT NULL,
                PRIMARY KEY  (`id_ad_videoblock`)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;'
         ];

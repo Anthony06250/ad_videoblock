@@ -24,19 +24,19 @@ namespace AdVideoBlock\Domain\VideoBlock\Command;
 
 use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
 
-class DeleteVideoBlockCommand
+class ToggleStatusVideoBlockCommand
 {
     /**
      * @var VideoBlockId
      */
-    private $id;
+    private $id_ad_videoblock;
 
     /**
-     * @param int $id
+     * @param $id
      */
-    public function __construct(int $id)
+    public function __construct($id)
     {
-        $this->id = new VideoBlockId($id);
+        $this->id_ad_videoblock = new VideoBlockId($id);
     }
 
     /**
@@ -44,6 +44,6 @@ class DeleteVideoBlockCommand
      */
     public function getId(): VideoBlockId
     {
-        return $this->id;
+        return $this->id_ad_videoblock;
     }
 }

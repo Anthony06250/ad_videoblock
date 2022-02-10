@@ -76,6 +76,14 @@ class VideoBlockType extends AbstractType
                 ]
             ])
             ->add('video_fullscreen', SwitchType::class, [
+                "label" => "Video fullscreen",
+                'choices' => [
+                    'OFF' => false,
+                    'ON' => true
+                ],
+            ])
+            ->add('active', SwitchType::class, [
+                "label" => "Video active",
                 'choices' => [
                     'OFF' => false,
                     'ON' => true

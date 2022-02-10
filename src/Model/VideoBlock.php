@@ -22,10 +22,18 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Model;
 
+use Db;
 use ObjectModel;
+use PrestaShopException;
+use Tools;
+use Validate;
 
 class VideoBlock extends ObjectModel
 {
+    /**
+     * -> TODO: See for delete $id_ad_videoblock and use instead $this->id inherit by parent
+     */
+
     /**
      * @var int
      */
@@ -62,9 +70,14 @@ class VideoBlock extends ObjectModel
     public $video_options;
 
     /**
-     * @var int
+     * @var bool
      */
     public $video_fullscreen;
+
+    /**
+     * @var bool
+     */
+    public $active;
 
     /**
      * @see ObjectModel::$definition
@@ -79,7 +92,8 @@ class VideoBlock extends ObjectModel
             'video_path' => ['type' => self::TYPE_STRING, 'size' => 255],
             'video_title' => ['type' => self::TYPE_STRING, 'size' => 255],
             'video_options' => ['type' => self::TYPE_STRING, 'size' => 255],
-            'video_fullscreen' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'video_fullscreen' => ['type' => self::TYPE_BOOL],
+            'active' => ['type' => self::TYPE_BOOL]
         ],
     ];
 
@@ -96,25 +110,26 @@ class VideoBlock extends ObjectModel
             'video_path' => $this->video_path,
             'video_title' => $this->video_title,
             'video_options' => $this->video_options,
-            'video_fullscreen' => $this->video_fullscreen
+            'video_fullscreen' => $this->video_fullscreen,
+            'active' => $this->active
         ];
     }
 
     /**
-     * @param array $data
-     * @return VideoBlock
+     * @return bool|void
+     * @throws PrestaShopException
      */
-    public function fromArray(array $data): VideoBlock
+    public function toggleFullscreen()
     {
-        $this->id_ad_videoblock = $data['id_ad_videoblock'] ?? null;
-        $this->id_category = $data['id_category'];
-        $this->block_title = $data['block_title'];
-        $this->block_subtitle = $data['block_subtitle'];
-        $this->video_path = $data['video_path'];
-        $this->video_title = $data['video_title'];
-        $this->video_options = $data['video_options'];
-        $this->video_fullscreen = $data['video_fullscreen'];
+        if (!Validate::isTableOrIdentifier(VideoBlock::$definition['primary']) OR !Validate::isTableOrIdentifier(VideoBlock::$definition['table'])) {
+            die(Tools::displayError());
+        } else if (!key_exists('video_fullscreen', (array)$this)) {
+            die(Tools::displayError());
+        }
 
-        return $this;
+        return Db::getInstance()->Execute('
+		    UPDATE `'.pSQL(_DB_PREFIX_.$this->table).'`
+		    SET `video_fullscreen` = !`video_fullscreen`
+		    WHERE `'.pSQL(VideoBlock::$definition['primary']).'` = ' . intval($this->id));
     }
 }

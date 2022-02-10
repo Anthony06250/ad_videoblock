@@ -31,6 +31,10 @@ use PrestaShopException;
 final class VideoBlockFormDataHandler implements FormDataHandlerInterface
 {
     /**
+     * -> TODO: Implement exceptions (try/catch) in fonction create and update
+     */
+
+    /**
      * @var CommandBusInterface
      */
     private $command_bus;
@@ -51,7 +55,7 @@ final class VideoBlockFormDataHandler implements FormDataHandlerInterface
     public function create(array $data): int
     {
         $command = new CreateVideoBlockCommand();
-        $data['video_fullscreen'] = $data['video_fullscreen'] ? 1 : 0;
+        $data['video_path'] = $this->getYoutubeIdFromUrl($data['video_path']);
         $videoblock = $this->command_bus->handle($command->fromArray($data));
 
         return $videoblock->getValue();
@@ -65,7 +69,32 @@ final class VideoBlockFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data): void
     {
         $command = new EditVideoBlockCommand((int)$id);
+        $data['video_path'] = $this->getYoutubeIdFromUrl($data['video_path']);
 
         $this->command_bus->handle($command->fromArray($data));
+    }
+
+    /**
+     * @param string $url
+     * @return string
+     * @throws PrestaShopException
+     */
+    private function getYoutubeIdFromUrl(string $url): string
+    {
+        $regex = '~
+            ^(?:https?://)?                           # Optional protocol
+            (?:www[.])?                              # Optional sub-domain
+            (?:youtube[.]com/watch[?]v=|youtu[.]be/) # Mandatory domain name (w/ query string in .com)
+            ([^&]{11})                               # Video id of 11 characters as capture group 1
+            ~x';
+        // Source : https://stackoverflow.com/questions/13476060/validating-youtube-url-using-regex
+
+        if (!preg_match($regex, $url, $matches)) {
+            throw new PrestaShopException(
+                'This is not a valid Youtube url.'
+            );
+        }
+
+        return $matches[1];
     }
 }

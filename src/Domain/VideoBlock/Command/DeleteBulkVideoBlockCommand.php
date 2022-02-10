@@ -22,28 +22,26 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\Command;
 
-use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
-
-class DeleteVideoBlockCommand
+class DeleteBulkVideoBlockCommand
 {
     /**
-     * @var VideoBlockId
+     * @var array
      */
-    private $id;
+    private $videoblockIds;
 
     /**
-     * @param int $id
+     * @param array $videoblockIds
      */
-    public function __construct(int $id)
+    public function __construct(array $videoblockIds)
     {
-        $this->id = new VideoBlockId($id);
+        $this->videoblockIds = $videoblockIds;
     }
 
     /**
-     * @return VideoBlockId
+     * @return array
      */
-    public function getId(): VideoBlockId
+    public function getId(): array
     {
-        return $this->id;
+        return $this->videoblockIds;
     }
 }

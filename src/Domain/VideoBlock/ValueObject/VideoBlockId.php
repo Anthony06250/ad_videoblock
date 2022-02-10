@@ -25,6 +25,10 @@ namespace AdVideoBlock\Domain\VideoBlock\ValueObject;
 class VideoBlockId
 {
     /**
+     * -> TODO: See interest of DTO for command
+     */
+
+    /**
      * @var int
      */
     private $id_videoblock;

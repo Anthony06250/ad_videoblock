@@ -22,35 +22,35 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\CommandHandler;
 
-use AdVideoBlock\Domain\VideoBlock\Command\EditVideoBlockCommand;
-use AdVideoBlock\Domain\VideoBlock\Exception\CannotEditVideoBlockException;
+use AdVideoBlock\Domain\VideoBlock\Command\DeleteBulkVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Exception\CannotDeleteBulkVideoBlockException;
 use AdVideoBlock\Model\VideoBlock;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 
-class EditVideoBlockHandler extends AbstractVideoBlockHandler
+class DeleteBulkVideoBlockHandler
 {
     /**
-     * @param EditVideoBlockCommand $command
+     * @param DeleteBulkVideoBlockCommand $command
      * @return void
-     * @throws CannotEditVideoBlockException
+     * @throws CannotDeleteBulkVideoBlockException
      * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
      */
-    public function handle(EditVideoBlockCommand $command): void
+    public function handle(DeleteBulkVideoBlockCommand $command): void
     {
-        $id = $command->getId()->getValue();
-        $videoblock = new VideoBlock($id);
-
-        $videoblock->hydrate($command->toArray());
+        $videoblockIds = $command->getId();
+        $videoblock = new VideoBlock();
 
         try {
-            if (false === $videoblock->update()) {
-                throw new CannotEditVideoBlockException(
-                    sprintf('Failed to update videoblock with id "%s"', $videoblock->id)
+            if (false === $videoblock->deleteSelection($videoblockIds)) {
+                throw new CannotDeleteBulkVideoBlockException(
+                    sprintf('Failed to delete videoblocks with ids "%s"', implode(', ', $videoblockIds))
                 );
             }
         } catch (PrestaShopException $exception) {
-            throw new CannotEditVideoBlockException(
-                'An unexpected error occurred when updating videoblock'
+            throw new CannotDeleteBulkVideoBlockException(
+                'An unexpected error occurred when delete videoblocks'
             );
         }
     }

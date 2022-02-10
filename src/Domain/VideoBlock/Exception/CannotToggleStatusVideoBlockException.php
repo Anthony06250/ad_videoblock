@@ -20,30 +20,8 @@
 
 declare(strict_types=1);
 
-namespace AdVideoBlock\Domain\VideoBlock\Command;
+namespace AdVideoBlock\Domain\VideoBlock\Exception;
 
-use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
-
-class DeleteVideoBlockCommand
+class CannotToggleStatusVideoBlockException extends VideoBlockException
 {
-    /**
-     * @var VideoBlockId
-     */
-    private $id;
-
-    /**
-     * @param int $id
-     */
-    public function __construct(int $id)
-    {
-        $this->id = new VideoBlockId($id);
-    }
-
-    /**
-     * @return VideoBlockId
-     */
-    public function getId(): VideoBlockId
-    {
-        return $this->id;
-    }
 }

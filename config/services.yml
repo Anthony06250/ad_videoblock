@@ -56,11 +56,23 @@ services:
           - name: tactician.handler
             command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand'
 
+  advideoblock.domain.videoblock.command_handler.delete_bulk_videoblock_handler:
+      class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DeleteBulkVideoBlockHandler'
+      tags:
+          - name: tactician.handler
+            command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteBulkVideoBlockCommand'
+
   advideoblock.domain.videoblock.command_handler.toggle_fullscreen_videoblock_handler:
       class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleFullscreenVideoBlockHandler'
       tags:
           - name: tactician.handler
             command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand'
+
+  advideoblock.domain.videoblock.command_handler.toggle_status_videoblock_handler:
+      class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleStatusVideoBlockHandler'
+      tags:
+          - name: tactician.handler
+            command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleStatusVideoBlockCommand'
 
   advideoblock.grid.factory.videoblock_grid_definition_factory:
     class: 'AdVideoBlock\Grid\Factory\VideoBlockGridDefinitionFactory'

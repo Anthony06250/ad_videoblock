@@ -31,6 +31,11 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
+     * -> TODO: Make Join on query for get category name
+     * -> TODO: See for use contextLanguage and contextShop
+     */
+
+    /**
      * @var int
      */
     private $contextLanguageId;
@@ -72,8 +77,8 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('p.`id_ad_videoblock`, p.`id_category`, p.`block_title`, p.`video_path`, p.`video_title`, p.`video_fullscreen`');
 
+        $qb->select('p.`id_ad_videoblock`, p.`id_category`, p.`block_title`, p.`video_path`, p.`video_title`, p.`block_subtitle`,p.`video_fullscreen`, p.`active`');
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb);
@@ -105,13 +110,6 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
 
 
         foreach ($filters as $filterName => $filter) {
-            if ('id_ad_videoblock' === $filterName) {
-                $qb->andWhere('p.`id_ad_videoblock` = :id_ad_videoblock');
-                $qb->setParameter('id_ad_videoblock', $filter);
-
-                continue;
-            }
-
             if ('id_category' === $filterName) {
                 $qb->andWhere('p.`id_category` = :id_category');
                 $qb->setParameter('id_category', $filter);
@@ -126,9 +124,9 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('video_path' === $filterName) {
-                $qb->andWhere('p.`video_path` LIKE :video_path');
-                $qb->setParameter('video_path', '%' . $filter . '%');
+            if ('block_subtitle' === $filterName) {
+                $qb->andWhere('p.`block_subtitle` LIKE :block_subtitle');
+                $qb->setParameter('block_subtitle', '%' . $filter . '%');
 
                 continue;
             }
@@ -143,6 +141,13 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('video_fullscreen' === $filterName) {
                 $qb->andWhere('p.`video_fullscreen` LIKE :video_fullscreen');
                 $qb->setParameter('video_fullscreen', '%' . $filter . '%');
+
+                continue;
+            }
+
+            if ('active' === $filterName) {
+                $qb->andWhere('p.`active` LIKE :active');
+                $qb->setParameter('active', '%' . $filter . '%');
 
                 continue;
             }

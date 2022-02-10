@@ -55,9 +55,14 @@ class CreateVideoBlockCommand
     private $video_options;
 
     /**
-     * @var int
+     * @var bool
      */
     private $video_fullscreen;
+
+    /**
+     * @var bool
+     */
+    private $active;
 
     /**
      * @return array
@@ -71,7 +76,8 @@ class CreateVideoBlockCommand
             'video_path' => $this->video_path,
             'video_title' => $this->video_title,
             'video_options' => $this->video_options,
-            'video_fullscreen' => $this->video_fullscreen
+            'video_fullscreen' => $this->video_fullscreen,
+            'active' => $this->active
         ];
     }
 
@@ -88,6 +94,7 @@ class CreateVideoBlockCommand
         $this->video_title = $data['video_title'];
         $this->video_options = $data['video_options'];
         $this->video_fullscreen = $data['video_fullscreen'];
+        $this->active = $data['active'];
 
         return $this;
     }

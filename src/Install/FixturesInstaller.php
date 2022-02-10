@@ -55,7 +55,8 @@ class FixturesInstaller
                 'video_path' => 'https://www.youtube.com/embed/XgGR0fneOhA',
                 'video_title' => 'Fairphone 4, la nouvelle version du smartphone éthique',
                 'video_options' => 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-                'video_fullscreen' => 1
+                'video_fullscreen' => 1,
+                'active' => 1
             ]
         ];
 

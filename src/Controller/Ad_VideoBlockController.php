@@ -22,12 +22,16 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Controller;
 
+use AdVideoBlock\Domain\VideoBlock\Command\DeleteBulkVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Command\ToggleStatusVideoBlockCommand;
 use AdVideoBlock\Grid\Factory\VideoBlockGridDefinitionFactory;
 use AdVideoBlock\Grid\Filters\VideoBlockFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,6 +40,7 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
 {
     /**
      * -> TODO: Implement exceptions (try/catch) in controller
+     * -> TODO: Made delete function on POST method
      */
 
     /**
@@ -149,12 +154,9 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
     public function deleteBulkAction(Request $request): RedirectResponse
     {
         $videoblockIds = $request->request->get('videoblock_bulk_action');
-        $handler = $this->get('advideoblock.domain.videoblock.command_handler.delete_videoblock_handler');
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.delete_bulk_videoblock_handler');
 
-        foreach ($videoblockIds as $id) {
-            $handler->handle(new DeleteVideoBlockCommand((int)$id));
-        }
-
+        $handler->handle(new DeleteBulkVideoBlockCommand($videoblockIds));
         $this->addFlash('success', $this->trans('The selection has been successfully deleted.', 'Modules.Advideoblock.Admin'));
 
         return $this->redirectToRoute('admin_ad_videoblock_index');
@@ -163,16 +165,35 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
      * @param int $id
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function toggleFullscreenAction(int $id): RedirectResponse
+    public function toggleFullscreenAction(int $id): JsonResponse
     {
         $handler = $this->get('advideoblock.domain.videoblock.command_handler.toggle_fullscreen_videoblock_handler');
 
         $handler->handle(new ToggleFullscreenVideoBlockCommand($id));
-        $this->addFlash('success', $this->trans('The fullscreen option has been successfully updated.', 'Modules.Advideoblock.Admin'));
 
-        return $this->redirectToRoute('admin_ad_videoblock_index');
+        return $this->json([
+            'status' => true,
+            'message' => $this->trans('The videoblock status has been successfully updated.', 'Modules.Advideoblock.Admin'),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function toggleStatusAction(int $id): JsonResponse
+    {
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.toggle_status_videoblock_handler');
+
+        $handler->handle(new ToggleStatusVideoBlockCommand($id));
+
+        return $this->json([
+            'status' => true,
+            'message' => $this->trans('The videoblock status has been successfully updated.', 'Modules.Advideoblock.Admin'),
+        ]);
     }
 
     /**

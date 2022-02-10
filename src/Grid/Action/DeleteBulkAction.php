@@ -20,30 +20,32 @@
 
 declare(strict_types=1);
 
-namespace AdVideoBlock\Domain\VideoBlock\Command;
+namespace AdVideoBlock\Grid\Action;
 
-use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DeleteVideoBlockCommand
+final class DeleteBulkAction extends AbstractBulkAction
 {
     /**
-     * @var VideoBlockId
+     * @return string
      */
-    private $id;
-
-    /**
-     * @param int $id
-     */
-    public function __construct(int $id)
+    public function getType(): string
     {
-        $this->id = new VideoBlockId($id);
+        return 'delete';
     }
 
     /**
-     * @return VideoBlockId
+     * @param OptionsResolver $resolver
+     * @return void
      */
-    public function getId(): VideoBlockId
+    protected function configureOptions(OptionsResolver $resolver): void
     {
-        return $this->id;
+        $resolver
+            ->setRequired(['bulk_delete_route'])
+            ->setAllowedTypes('bulk_delete_route', 'string')
+            ->setDefaults([
+                'confirm_message' => 'Delete selected items ?'
+            ]);
     }
 }

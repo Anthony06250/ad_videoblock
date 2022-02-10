@@ -42,10 +42,8 @@ class ToggleFullscreenVideoBlockHandler
         $id = $command->getId()->getValue();
         $videoblock = new VideoBlock($id);
 
-        $videoblock->video_fullscreen = $videoblock->video_fullscreen ? 0 : 1;
-
         try {
-            if (false === $videoblock->update()) {
+            if (false === $videoblock->toggleFullscreen()) {
                 throw new CannotToggleFullscreenVideoBlockException(
                     sprintf('Failed to toggle fullscreen for videoblock with id "%s"', $videoblock->id)
                 );
