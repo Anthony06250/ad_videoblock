@@ -20,10 +20,16 @@
 
 declare(strict_types=1);
 
-namespace AdVideoBlock\Domain\VideoBlock\Exception;
+namespace AdVideoBlock\Grid\Action;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-
-class VideoBlockException extends DomainException
+final class EnableBulkAction extends ModalBulkAction
 {
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return 'enable';
+    }
 }
+

@@ -33,13 +33,11 @@ admin_ad_videoblock_edit:
     id: \d+
 
 admin_ad_videoblock_delete:
-  path: /{id}/delete
-  methods: [POST]
+  path: /delete
+  methods: [DELETE]
   defaults:
     _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::deleteAction'
     _legacy_controller: 'AdminVideoBlock'
-  requirements:
-    id: \d+
 
 admin_ad_videoblock_delete_bulk:
   path: /delete-bulk
@@ -48,6 +46,26 @@ admin_ad_videoblock_delete_bulk:
     _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::deleteBulkAction'
     _legacy_controller: 'AdminVideoBlock'
 
+admin_ad_videoblock_enable_bulk:
+  path: /enable-bulk
+  methods: [POST]
+  defaults:
+    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::enableBulkAction'
+    _legacy_controller: 'AdminVideoBlock'
+
+admin_ad_videoblock_disable_bulk:
+  path: /disable-bulk
+  methods: [POST]
+  defaults:
+    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::disableBulkAction'
+    _legacy_controller: 'AdminVideoBlock'
+
+admin_ad_videoblock_duplicate_bulk:
+    path: /duplicate-bulk
+    methods: [POST]
+    defaults:
+        _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::duplicateBulkAction'
+        _legacy_controller: 'AdminVideoBlock'
 
 admin_ad_videoblock_toggle_fullscreen:
     path: /{id}/toggle-fullscreen

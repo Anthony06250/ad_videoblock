@@ -24,6 +24,7 @@ namespace AdVideoBlock\Form;
 
 use AdVideoBlock\Domain\VideoBlock\Command\CreateVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\EditVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Exception\VideoBlockException;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
 use PrestaShopException;
@@ -31,32 +32,28 @@ use PrestaShopException;
 final class VideoBlockFormDataHandler implements FormDataHandlerInterface
 {
     /**
-     * -> TODO: Implement exceptions (try/catch) in fonction create and update
-     */
-
-    /**
      * @var CommandBusInterface
      */
-    private $command_bus;
+    private $commandBus;
 
     /**
-     * @param CommandBusInterface $command_bus
+     * @param CommandBusInterface $commandBus
      */
-    public function __construct(CommandBusInterface $command_bus)
+    public function __construct(CommandBusInterface $commandBus)
     {
-        $this->command_bus = $command_bus;
+        $this->commandBus = $commandBus;
     }
 
     /**
      * @param array $data
      * @return int
-     * @throws PrestaShopException
+     * @throws VideoBlockException
      */
     public function create(array $data): int
     {
         $command = new CreateVideoBlockCommand();
         $data['video_path'] = $this->getYoutubeIdFromUrl($data['video_path']);
-        $videoblock = $this->command_bus->handle($command->fromArray($data));
+        $videoblock = $this->commandBus->handle($command->fromArray($data));
 
         return $videoblock->getValue();
     }
@@ -65,20 +62,20 @@ final class VideoBlockFormDataHandler implements FormDataHandlerInterface
      * @param $id
      * @param array $data
      * @return void
-     * @throws PrestaShopException
+     * @throws VideoBlockException
      */
     public function update($id, array $data): void
     {
         $command = new EditVideoBlockCommand((int)$id);
         $data['video_path'] = $this->getYoutubeIdFromUrl($data['video_path']);
 
-        $this->command_bus->handle($command->fromArray($data));
+        $this->commandBus->handle($command->fromArray($data));
     }
 
     /**
      * @param string $url
      * @return string
-     * @throws PrestaShopException
+     * @throws VideoBlockException
      */
     private function getYoutubeIdFromUrl(string $url): string
     {
@@ -91,8 +88,8 @@ final class VideoBlockFormDataHandler implements FormDataHandlerInterface
         // Source : https://stackoverflow.com/questions/13476060/validating-youtube-url-using-regex
 
         if (!preg_match($regex, $url, $matches)) {
-            throw new PrestaShopException(
-                'This is not a valid Youtube url.'
+            throw new VideoBlockException(
+                sprintf('%s is not a valid Youtube url.', $url)
             );
         }
 

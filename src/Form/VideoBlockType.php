@@ -24,18 +24,15 @@ namespace AdVideoBlock\Form;
 
 use PrestaShopBundle\Form\Admin\Type\CategoryChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Url;
 
-class VideoBlockType extends AbstractType
+class VideoBlockType extends TranslatorAwareType
 {
-    /**
-     * -> TODO: Rebuild layout form with validation and trans label
-     * -> TODO: Use constraints for check entered data
-     */
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -45,56 +42,69 @@ class VideoBlockType extends AbstractType
     {
         $builder->add('id_ad_videoblock', HiddenType::class)
             ->add('id_category', CategoryChoiceTreeType::class, [
-                "label" => "Category",
-                'disabled_values' => [0],
-                'required' => true
+                'required' => true,
+                'label' => $this->trans('Category', 'Modules.Advideoblock.Admin'),
+                'disabled_values' => [0]
             ])
             ->add('block_title', TextType::class, [
                 'required' => false,
-                "attr" => [
-                    "label" => "Block title",
-                    "placeholder" => "The block title"
+                'constraints' => [
+                    new Length(['max' => 255])
+                ],
+                'attr' => [
+                    'label' => $this->trans('Block title', 'Modules.Advideoblock.Admin'),
+                    'placeholder' => $this->trans('The block title', 'Modules.Advideoblock.Admin')
                 ]
             ])
             ->add('block_subtitle', TextType::class, [
                 'required' => false,
-                "attr" => [
-                    "label" => "Block subtitle",
-                    "placeholder" => "The block subtitle"
+                'constraints' => [
+                    new Length(['max' => 255])
+                ],
+                'attr' => [
+                    'label' => $this->trans('Block subtitle', 'Modules.Advideoblock.Admin'),
+                    'placeholder' => $this->trans('The block subtitle', 'Modules.Advideoblock.Admin')
                 ]
             ])
             ->add('video_path', TextType::class, [
                 'constraints' => [
-                    new \Symfony\Component\Validator\Constraints\Url(),
+                    new Length(['max' => 255]),
+                    new Url()
                 ],
-                "attr" => [
-                    "label" => "Video path",
-                    "placeholder" => "The video path"
+                'attr' => [
+                    'label' => $this->trans('Video path', 'Modules.Advideoblock.Admin'),
+                    'placeholder' => $this->trans('The video path', 'Modules.Advideoblock.Admin')
                 ]
             ])
             ->add('video_title', TextType::class, [
                 'required' => false,
-                "attr" => [
-                    "label" => "Video title",
-                    "placeholder" => "The video title"
+                'constraints' => [
+                    new Length(['max' => 255])
+                ],
+                'attr' => [
+                    'label' => $this->trans('Video title', 'Modules.Advideoblock.Admin'),
+                    'placeholder' => $this->trans('The video title', 'Modules.Advideoblock.Admin')
                 ]
             ])
             ->add('video_options', TextType::class, [
                 'required' => false,
-                "attr" => [
-                    "label" => "Video options",
-                    "placeholder" => "The video options"
+                'constraints' => [
+                    new Length(['max' => 255])
+                ],
+                'attr' => [
+                    'label' => $this->trans('Video options', 'Modules.Advideoblock.Admin'),
+                    'placeholder' => $this->trans('The video options', 'Modules.Advideoblock.Admin')
                 ]
             ])
             ->add('video_fullscreen', SwitchType::class, [
-                "label" => "Video fullscreen",
+                'label' => $this->trans('Video fullscreen', 'Modules.Advideoblock.Admin'),
                 'choices' => [
                     'OFF' => false,
                     'ON' => true
                 ],
             ])
             ->add('active', SwitchType::class, [
-                "label" => "Video active",
+                'label' => $this->trans('Video active', 'Modules.Advideoblock.Admin'),
                 'choices' => [
                     'OFF' => false,
                     'ON' => true

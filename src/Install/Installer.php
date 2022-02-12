@@ -31,14 +31,14 @@ class Installer
     /**
      * @var FixturesInstaller
      */
-    private $fixtures_installer;
+    private $fixturesInstaller;
 
     /**
-     * @param FixturesInstaller $fixtures_installer
+     * @param FixturesInstaller $fixturesInstaller
      */
-    public function __construct(FixturesInstaller $fixtures_installer)
+    public function __construct(FixturesInstaller $fixturesInstaller)
     {
-        $this->fixtures_installer = $fixtures_installer;
+        $this->fixturesInstaller = $fixturesInstaller;
     }
 
     /**
@@ -53,7 +53,7 @@ class Installer
             return false;
         }
 
-        $this->fixtures_installer->install();
+        $this->fixturesInstaller->install();
 
         return true;
     }

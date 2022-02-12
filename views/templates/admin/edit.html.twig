@@ -7,9 +7,9 @@
                 <header class="card-header">
                     <h3 class="d-inline-block card-header-title">
                         <i class="material-icons">
-                            {{ form.vars.data.id is not defined ? ' add_circle_outline' : 'edit' }}
+                            {{ form.vars.value.id_ad_videoblock is not defined ? ' add_circle_outline' : 'edit' }}
                         </i>
-                        {{ (form.vars.data.id is not defined ? 'New' : 'Edit') ~ ' Video Block' | trans({}, 'Modules.Advideoblock.Admin') }}
+                        {{ (form.vars.value.id_ad_videoblock is not defined ? 'New' : 'Edit') ~ ' Video Block' | trans({}, 'Modules.Advideoblock.Admin') }}
                     </h3>
                 </header>
                 {{ form_start(form) }}
@@ -27,9 +27,12 @@
                     </article>
                     <footer class="card-footer">
                         <div class="d-flex justify-content-between">
-                            <a href="{{ url('admin_ad_videoblock_index') }}"
-                               class="btn btn-secondary">{{ 'Cancel' | trans({}, 'Modules.Advideoblock.Admin') }}</a>
-                            <button class="btn btn-primary">{{ 'Save' | trans({}, 'Modules.Advideoblock.Admin') }}</button>
+                            <a href="{{ url('admin_ad_videoblock_index') }}" class="btn btn-secondary">
+                                {{ 'Cancel' | trans({}, 'Modules.Advideoblock.Admin') }}
+                            </a>
+                            <button class="btn btn-{{ form.vars.value.id_ad_videoblock is not defined ? 'primary' : 'warning' }}">
+                                {{ (form.vars.value.id_ad_videoblock is not defined ? 'Save' : 'Edit') | trans({}, 'Modules.Advideoblock.Admin') }}
+                            </button>
                         </div>
                     </footer>
                 {{ form_end(form) }}

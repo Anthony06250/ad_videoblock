@@ -1,106 +1,113 @@
 services:
-  advideoblock.repository.videoblock_repository:
-    class: AdVideoBlock\Repository\VideoBlockRepository
-    arguments: ['@doctrine.dbal.default_connection', '%database_prefix%']
+    advideoblock.repository.videoblock_repository:
+        class: AdVideoBlock\Repository\VideoBlockRepository
+        arguments: [ '@doctrine.dbal.default_connection', '%database_prefix%' ]
 
-  advideoblock.form.videoblock_form_data_provider:
-    class: 'AdVideoBlock\Form\VideoBlockFormDataProvider'
-    arguments:
-      - '@prestashop.core.query_bus'
+    advideoblock.form.videoblock_form_type:
+        class: 'AdVideoBlock\Form\VideoBlockType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - name: form.type
 
-  advideoblock.form.videoblock_form_builder:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
-    factory: 'prestashop.core.form.builder.form_builder_factory:create'
-    arguments:
-      - 'AdVideoBlock\Form\VideoBlockType'
-      - '@advideoblock.form.videoblock_form_data_provider'
+    advideoblock.form.videoblock_form_data_provider:
+        class: 'AdVideoBlock\Form\VideoBlockFormDataProvider'
+        arguments:
+            - '@prestashop.core.query_bus'
 
-  advideoblock.form.videoblock_form_data_handler:
-    class: 'AdVideoBlock\Form\VideoBlockFormDataHandler'
-    arguments:
-      - '@prestashop.core.command_bus'
+    advideoblock.form.videoblock_form_builder:
+        class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+        factory: 'prestashop.core.form.builder.form_builder_factory:create'
+        arguments:
+            - 'AdVideoBlock\Form\VideoBlockType'
+            - '@advideoblock.form.videoblock_form_data_provider'
 
-  advideoblock.form.videoblock_form_handler:
-    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
-    factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
-    arguments:
-      - '@advideoblock.form.videoblock_form_data_handler'
+    advideoblock.form.videoblock_form_data_handler:
+        class: 'AdVideoBlock\Form\VideoBlockFormDataHandler'
+        arguments:
+            - '@prestashop.core.command_bus'
 
-  advideoblock.domain.videoblock.query_handler.get_videoblock_for_form_handler:
-    class: 'AdVideoBlock\Domain\VideoBlock\QueryHandler\GetVideoBlockForFormHandler'
-    arguments:
-      - '@advideoblock.repository.videoblock_repository'
-    tags:
-      - name: tactician.handler
-        command: 'AdVideoBlock\Domain\VideoBlock\Query\GetVideoBlockForForm'
+    advideoblock.form.videoblock_form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
+        factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
+        arguments:
+            - '@advideoblock.form.videoblock_form_data_handler'
 
-  advideoblock.domain.videoblock.command_handler.create_videoblock_handler:
-    class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\CreateVideoBlockHandler'
-    arguments:
-      - '@advideoblock.repository.videoblock_repository'
-    tags:
-      - name: tactician.handler
-        command: 'AdVideoBlock\Domain\VideoBlock\Command\CreateVideoBlockCommand'
+    advideoblock.domain.videoblock.query_handler.get_videoblock_for_form_handler:
+        class: 'AdVideoBlock\Domain\VideoBlock\QueryHandler\GetVideoBlockForFormHandler'
+        arguments:
+            - '@advideoblock.repository.videoblock_repository'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Query\GetVideoBlockForForm'
 
-  advideoblock.domain.videoblock.command_handler.edit_videoblock_handler:
-    class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\EditVideoBlockHandler'
-    arguments:
-      - '@advideoblock.repository.videoblock_repository'
-    tags:
-      - name: tactician.handler
-        command: 'AdVideoBlock\Domain\VideoBlock\Command\EditVideoBlockCommand'
+    advideoblock.domain.videoblock.command_handler.create_videoblock_handler:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\CreateVideoBlockHandler'
+        arguments:
+            - '@advideoblock.repository.videoblock_repository'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\CreateVideoBlockCommand'
 
-  advideoblock.domain.videoblock.command_handler.delete_videoblock_handler:
-      class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DeleteVideoBlockHandler'
-      tags:
-          - name: tactician.handler
-            command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand'
+    advideoblock.domain.videoblock.command_handler.edit_videoblock_handler:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\EditVideoBlockHandler'
+        arguments:
+            - '@advideoblock.repository.videoblock_repository'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\EditVideoBlockCommand'
 
-  advideoblock.domain.videoblock.command_handler.delete_bulk_videoblock_handler:
-      class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DeleteBulkVideoBlockHandler'
-      tags:
-          - name: tactician.handler
-            command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteBulkVideoBlockCommand'
+    advideoblock.domain.videoblock.command_handler.delete_videoblock_handler:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DeleteVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand'
 
-  advideoblock.domain.videoblock.command_handler.toggle_fullscreen_videoblock_handler:
-      class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleFullscreenVideoBlockHandler'
-      tags:
-          - name: tactician.handler
-            command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand'
+    advideoblock.domain.videoblock.command_handler.delete_bulk_videoblock_handler:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DeleteBulkVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteBulkVideoBlockCommand'
 
-  advideoblock.domain.videoblock.command_handler.toggle_status_videoblock_handler:
-      class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleStatusVideoBlockHandler'
-      tags:
-          - name: tactician.handler
-            command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleStatusVideoBlockCommand'
+    advideoblock.domain.videoblock.command_handler.toggle_fullscreen_videoblock_handler:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleFullscreenVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand'
 
-  advideoblock.grid.factory.videoblock_grid_definition_factory:
-    class: 'AdVideoBlock\Grid\Factory\VideoBlockGridDefinitionFactory'
-    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-    public: true
+    advideoblock.domain.videoblock.command_handler.toggle_status_videoblock_handler:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleStatusVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleStatusVideoBlockCommand'
 
-  advideoblock.grid.query.videoblock_query_builder:
-    class: 'AdVideoBlock\Grid\Query\VideoBlockQueryBuilder'
-    parent: 'prestashop.core.grid.abstract_query_builder'
-    public: true
-    arguments:
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+    advideoblock.grid.factory.videoblock_grid_definition_factory:
+        class: 'AdVideoBlock\Grid\Factory\VideoBlockGridDefinitionFactory'
+        parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+        public: true
 
-  advideoblock.grid.data.advideoblock_grid_data_provider:
-    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
-    arguments:
-      - '@advideoblock.grid.query.videoblock_query_builder'
-      - '@prestashop.core.hook.dispatcher'
-      - '@prestashop.core.grid.query.doctrine_query_parser'
-      - 'ad_videoblock'
+    advideoblock.grid.query.videoblock_query_builder:
+        class: 'AdVideoBlock\Grid\Query\VideoBlockQueryBuilder'
+        parent: 'prestashop.core.grid.abstract_query_builder'
+        public: true
+        arguments:
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+            - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+            - '@prestashop.core.query.doctrine_search_criteria_applicator'
 
-  advideoblock.grid.factory.videoblock_grid_factory:
-    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
-    public: true
-    arguments:
-      - '@advideoblock.grid.factory.videoblock_grid_definition_factory'
-      - '@advideoblock.grid.data.advideoblock_grid_data_provider'
-      - '@prestashop.core.grid.filter.form_factory'
-      - '@prestashop.core.hook.dispatcher'
+    advideoblock.grid.data.advideoblock_grid_data_provider:
+        class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+        arguments:
+            - '@advideoblock.grid.query.videoblock_query_builder'
+            - '@prestashop.core.hook.dispatcher'
+            - '@prestashop.core.grid.query.doctrine_query_parser'
+            - 'ad_videoblock'
+
+    advideoblock.grid.factory.videoblock_grid_factory:
+        class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+        public: true
+        arguments:
+            - '@advideoblock.grid.factory.videoblock_grid_definition_factory'
+            - '@advideoblock.grid.data.advideoblock_grid_data_provider'
+            - '@prestashop.core.grid.filter.form_factory'
+            - '@prestashop.core.hook.dispatcher'

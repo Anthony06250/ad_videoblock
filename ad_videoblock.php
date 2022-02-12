@@ -62,11 +62,8 @@ class Ad_VideoBlock extends Module
         parent::__construct();
 
         $this->displayName = $this->trans('AD - Video Block', [], 'Modules.Advideoblock.Admin');
-        $this->description = $this->trans('Display a video block on the homepage and on the categories.', [],
-            'Modules.Advideoblock.Admin');
-
-        $this->confirmUninstall = $this->trans('Are you sure you want to uninstall ?', [],
-            'Modules.Advideoblock.Admin');
+        $this->description = $this->trans('Display a video block on the homepage and on the categories.', [], 'Modules.Advideoblock.Admin');
+        $this->confirmUninstall = $this->trans('Are you sure you want to uninstall ?', [], 'Modules.Advideoblock.Admin');
     }
 
     /**
@@ -112,27 +109,6 @@ class Ad_VideoBlock extends Module
             'modules/' . '/' . $this->name . '/views/css/custom.css',
             ['media' => 'all', 'priority' => 200]
         );
-    }
-
-    public function hookDisplayAdminOrderTop(array $params)
-    {
-        return $this->render(_PS_MODULE_DIR_ . '/' . $this->name . '/views/templates/widget/videoblock.tpl', [
-            'videoblocks' => []
-        ]);
-    }
-
-    public function hookDisplayHome(array $params)
-    {
-//        return $this->render(_PS_MODULE_DIR_ . '/' . $this->name . '/views/templates/widget/videoblock.tpl', [
-//            'videoblocks' => []
-//        ]);
-    }
-
-    private function render(string $template, array $params = []): string
-    {
-        $twig = $this->get('twig');
-
-        return $twig->render($template, $params);
     }
 
     /**

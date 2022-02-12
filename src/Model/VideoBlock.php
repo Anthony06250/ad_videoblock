@@ -31,6 +31,10 @@ use Validate;
 class VideoBlock extends ObjectModel
 {
     /**
+     * -> TODO: Change variables name
+     */
+
+    /**
      * @var int
      */
     public $id_category;

@@ -22,10 +22,7 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Grid\Action;
 
-use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-
-final class DeleteBulkAction extends AbstractBulkAction
+final class DeleteBulkAction extends ModalBulkAction
 {
     /**
      * @return string
@@ -33,19 +30,5 @@ final class DeleteBulkAction extends AbstractBulkAction
     public function getType(): string
     {
         return 'delete';
-    }
-
-    /**
-     * @param OptionsResolver $resolver
-     * @return void
-     */
-    protected function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver
-            ->setRequired(['bulk_delete_route'])
-            ->setAllowedTypes('bulk_delete_route', 'string')
-            ->setDefaults([
-                'confirm_message' => 'Delete selected items ?'
-            ]);
     }
 }
