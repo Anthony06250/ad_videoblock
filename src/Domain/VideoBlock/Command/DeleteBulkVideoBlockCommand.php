@@ -22,28 +22,6 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\Command;
 
-use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
-
-class DeleteBulkVideoBlockCommand
+class DeleteBulkVideoBlockCommand extends AbstractVideoBlockCommand
 {
-    /**
-     * @var VideoBlockId
-     */
-    private $id;
-
-    /**
-     * @param array $id
-     */
-    public function __construct(array $id)
-    {
-        $this->id = new VideoBlockId($id);
-    }
-
-    /**
-     * @return VideoBlockId
-     */
-    public function getId(): VideoBlockId
-    {
-        return $this->id;
-    }
 }

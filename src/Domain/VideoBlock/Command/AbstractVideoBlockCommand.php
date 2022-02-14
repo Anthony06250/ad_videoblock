@@ -20,8 +20,30 @@
 
 declare(strict_types=1);
 
-namespace AdVideoBlock\Domain\VideoBlock\Exception;
+namespace AdVideoBlock\Domain\VideoBlock\Command;
 
-class CannotDeleteVideoBlockException extends VideoBlockException
+use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
+
+class AbstractVideoBlockCommand
 {
+    /**
+     * @var VideoBlockId
+     */
+    private $id;
+
+    /**
+     * @param mixed $id
+     */
+    public function __construct($id = null)
+    {
+        $this->id = new VideoBlockId($id);
+    }
+
+    /**
+     * @return VideoBlockId
+     */
+    public function getId(): VideoBlockId
+    {
+        return $this->id;
+    }
 }

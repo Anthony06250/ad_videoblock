@@ -73,8 +73,9 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $query = $this->getQueryBuilder($searchCriteria->getFilters());
 
-        $query->select('p.`id_ad_videoblock` AS `id`, p.`block_title`, p.`video_path`, p.`video_title`, p.`block_subtitle`,p.`video_fullscreen`, p.`active`')
+        $query->select('p.`id_ad_videoblock` AS `id`, p.`title`, p.`subtitle`, p.`url`, p.`description`, p.`fullscreen`, p.`active`')
             ->addSelect('pl.`name` AS `category`');
+
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $query)
             ->applySorting($searchCriteria, $query);
@@ -119,7 +120,6 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
             ->setParameter('id_shop', $this->contextShopId);
 
         foreach ($filters as $filterName => $filter) {
-            dump($filter);
             if ('category' === $filterName) {
                 $query->andWhere('pl.`name` LIKE :category');
                 $query->setParameter('category', '%' . $filter . '%');
@@ -127,30 +127,30 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('block_title' === $filterName) {
-                $query->andWhere('p.`block_title` LIKE :block_title');
-                $query->setParameter('block_title', '%' . $filter . '%');
+            if ('title' === $filterName) {
+                $query->andWhere('p.`title` LIKE :title');
+                $query->setParameter('title', '%' . $filter . '%');
 
                 continue;
             }
 
-            if ('block_subtitle' === $filterName) {
-                $query->andWhere('p.`block_subtitle` LIKE :block_subtitle');
-                $query->setParameter('block_subtitle', '%' . $filter . '%');
+            if ('subtitle' === $filterName) {
+                $query->andWhere('p.`subtitle` LIKE :subtitle');
+                $query->setParameter('subtitle', '%' . $filter . '%');
 
                 continue;
             }
 
-            if ('video_title' === $filterName) {
-                $query->andWhere('p.`video_title` LIKE :video_title');
-                $query->setParameter('video_title', '%' . $filter . '%');
+            if ('description' === $filterName) {
+                $query->andWhere('p.`description` LIKE :description');
+                $query->setParameter('description', '%' . $filter . '%');
 
                 continue;
             }
 
-            if ('video_fullscreen' === $filterName) {
-                $query->andWhere('p.`video_fullscreen` LIKE :video_fullscreen');
-                $query->setParameter('video_fullscreen', '%' . $filter . '%');
+            if ('fullscreen' === $filterName) {
+                $query->andWhere('p.`fullscreen` LIKE :fullscreen');
+                $query->setParameter('fullscreen', '%' . $filter . '%');
 
                 continue;
             }

@@ -27,7 +27,7 @@ use AdVideoBlock\Domain\VideoBlock\Exception\CannotEditVideoBlockException;
 use AdVideoBlock\Model\VideoBlock;
 use PrestaShopException;
 
-class EditVideoBlockHandler extends AbstractVideoBlockHandler
+class EditVideoBlockHandler
 {
     /**
      * @param EditVideoBlockCommand $command

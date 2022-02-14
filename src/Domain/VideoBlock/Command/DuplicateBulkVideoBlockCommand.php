@@ -20,8 +20,8 @@
 
 declare(strict_types=1);
 
-namespace AdVideoBlock\Domain\VideoBlock\Exception;
+namespace AdVideoBlock\Domain\VideoBlock\Command;
 
-class CannotDeleteVideoBlockException extends VideoBlockException
+class DuplicateBulkVideoBlockCommand extends AbstractVideoBlockCommand
 {
 }

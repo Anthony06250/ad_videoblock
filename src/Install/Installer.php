@@ -74,7 +74,9 @@ class Installer
     {
         $hooks = [
             'displayAdminOrderTop',
-            'displayHome'
+            'actionFrontControllerSetMedia',
+            'displayHome',
+            'displayContentWrapperTop'
         ];
 
         return $module->registerHook($hooks);
@@ -89,12 +91,12 @@ class Installer
             'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ad_videoblock` (
                `id_ad_videoblock` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                `id_category` int(10) UNSIGNED NOT NULL,
-               `block_title` varchar(255) DEFAULT NULL,
-               `block_subtitle` varchar(255) DEFAULT NULL,
-               `video_path` varchar(255) NOT NULL,
-               `video_title` varchar(255) DEFAULT NULL,
-               `video_options` varchar(255) DEFAULT NULL,
-               `video_fullscreen` int(2) UNSIGNED NOT NULL,
+               `title` varchar(255) DEFAULT NULL,
+               `subtitle` varchar(255) DEFAULT NULL,
+               `url` varchar(255) NOT NULL,
+               `description` varchar(255) DEFAULT NULL,
+               `options` varchar(255) DEFAULT NULL,
+               `fullscreen` int(2) UNSIGNED NOT NULL,
                `active` int(2) UNSIGNED NOT NULL,
                PRIMARY KEY  (`id_ad_videoblock`)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;'

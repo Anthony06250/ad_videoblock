@@ -21,6 +21,8 @@
 declare(strict_types=1);
 
 use AdVideoBlock\Install\InstallerFactory;
+use AdVideoBlock\Repository\VideoBlockRepository;
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -28,10 +30,12 @@ if (!defined('_PS_VERSION_')) {
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-class Ad_VideoBlock extends Module
+class Ad_VideoBlock extends Module implements WidgetInterface
 {
     /**
      * -> TODO: Made multiple language
+     * -> TODO: Made multiple shop
+     * -> TODO: Make enable/disable fullscreen on grid bulk action
      */
 
     public function __construct()
@@ -63,6 +67,7 @@ class Ad_VideoBlock extends Module
 
         $this->displayName = $this->trans('AD - Video Block', [], 'Modules.Advideoblock.Admin');
         $this->description = $this->trans('Display a video block on the homepage and on the categories.', [], 'Modules.Advideoblock.Admin');
+
         $this->confirmUninstall = $this->trans('Are you sure you want to uninstall ?', [], 'Modules.Advideoblock.Admin');
     }
 
@@ -109,6 +114,47 @@ class Ad_VideoBlock extends Module
             'modules/' . '/' . $this->name . '/views/css/custom.css',
             ['media' => 'all', 'priority' => 200]
         );
+    }
+
+    /**
+     * @param mixed $hookName
+     * @param array $configuration
+     * @return false|string|void
+     * @throws Exception
+     */
+    public function renderWidget($hookName, array $configuration)
+    {
+        if ($hookName == 'displayHome'
+            || Tools::getValue('id_category')) {
+                $this->smarty->assign(['videoblocks' => $this->getWidgetVariables($hookName, $configuration)]);
+
+                return $this->display(__FILE__, 'views/templates/widget/videoblock.tpl');
+        }
+    }
+
+    /**
+     * @param mixed $hookName
+     * @param array $configuration
+     * @return array|null
+     * @throws Exception
+     */
+    public function getWidgetVariables($hookName, array $configuration): ?array
+    {
+        $videoblocks = null;
+        $category = $hookName == 'displayHome' ? 2 : (int)Tools::getValue('id_category');
+
+        if ($connection = $this->get('doctrine.dbal.default_connection')) {
+            $videoblocks = (new VideoBlockRepository($connection))->findAllBy([
+                'id_category' => $category,
+                'active' => true
+            ]);
+
+            foreach ($videoblocks as &$videoblock) {
+                $videoblock['url'] = 'https://www.youtube-nocookie.com/embed/' . $videoblock['url'];
+            }
+        }
+
+        return $videoblocks;
     }
 
     /**

@@ -22,28 +22,6 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\Command;
 
-use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
-
-class ToggleStatusVideoBlockCommand
+class ToggleStatusVideoBlockCommand extends AbstractVideoBlockCommand
 {
-    /**
-     * @var VideoBlockId
-     */
-    private $id_ad_videoblock;
-
-    /**
-     * @param $id
-     */
-    public function __construct($id)
-    {
-        $this->id_ad_videoblock = new VideoBlockId($id);
-    }
-
-    /**
-     * @return VideoBlockId
-     */
-    public function getId(): VideoBlockId
-    {
-        return $this->id_ad_videoblock;
-    }
 }

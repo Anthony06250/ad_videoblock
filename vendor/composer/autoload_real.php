@@ -22,8 +22,7 @@ class ComposerAutoloaderInitaf2aa7d31a5026f9dc7ac710eaa1e59b
             return self::$loader;
         }
 
-        spl_autoload_register(array('ComposerAutoloaderInitaf2aa7d31a5026f9dc7ac710eaa1e59b', 'loadClassLoader'), true,
-            true);
+        spl_autoload_register(array('ComposerAutoloaderInitaf2aa7d31a5026f9dc7ac710eaa1e59b', 'loadClassLoader'), true, true);
         self::$loader = $loader = new \Composer\Autoload\ClassLoader(\dirname(\dirname(__FILE__)));
         spl_autoload_unregister(array('ComposerAutoloaderInitaf2aa7d31a5026f9dc7ac710eaa1e59b', 'loadClassLoader'));
 

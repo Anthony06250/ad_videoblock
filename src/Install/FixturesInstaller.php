@@ -49,13 +49,13 @@ class FixturesInstaller
     {
         $datas = [
             [
-                'id_category' => 0,
-                'block_title' => 'Custom video block',
-                'block_subtitle' => 'Lorem ipsum dolor sit amet conse ctetu',
-                'video_path' => 'https://www.youtube.com/embed/XgGR0fneOhA',
-                'video_title' => 'Fairphone 4, la nouvelle version du smartphone éthique',
-                'video_options' => 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-                'video_fullscreen' => 1,
+                'id_category' => 2,
+                'title' => 'Custom video block',
+                'subtitle' => 'Lorem ipsum dolor sit amet conse ctetu',
+                'url' => 'XgGR0fneOhA',
+                'description' => 'Fairphone 4, la nouvelle version du smartphone éthique',
+                'options' => 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+                'fullscreen' => 1,
                 'active' => 1
             ]
         ];

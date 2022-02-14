@@ -22,18 +22,12 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Model;
 
-use Db;
 use ObjectModel;
+use PrestaShopDatabaseException;
 use PrestaShopException;
-use Tools;
-use Validate;
 
 class VideoBlock extends ObjectModel
 {
-    /**
-     * -> TODO: Change variables name
-     */
-
     /**
      * @var int
      */
@@ -42,32 +36,32 @@ class VideoBlock extends ObjectModel
     /**
      * @var string
      */
-    public $block_title;
+    public $title;
 
     /**
      * @var string
      */
-    public $block_subtitle;
+    public $subtitle;
 
     /**
      * @var string
      */
-    public $video_path;
+    public $url;
 
     /**
      * @var string
      */
-    public $video_title;
+    public $description;
 
     /**
      * @var string
      */
-    public $video_options;
+    public $options;
 
     /**
      * @var bool
      */
-    public $video_fullscreen;
+    public $fullscreen;
 
     /**
      * @var bool
@@ -82,12 +76,12 @@ class VideoBlock extends ObjectModel
         'primary' => 'id_ad_videoblock',
         'fields' => [
             'id_category' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
-            'block_title' => ['type' => self::TYPE_STRING, 'size' => 255],
-            'block_subtitle' => ['type' => self::TYPE_STRING, 'size' => 255],
-            'video_path' => ['type' => self::TYPE_STRING, 'size' => 255],
-            'video_title' => ['type' => self::TYPE_STRING, 'size' => 255],
-            'video_options' => ['type' => self::TYPE_STRING, 'size' => 255],
-            'video_fullscreen' => ['type' => self::TYPE_BOOL],
+            'title' => ['type' => self::TYPE_STRING, 'size' => 255],
+            'subtitle' => ['type' => self::TYPE_STRING, 'size' => 255],
+            'url' => ['type' => self::TYPE_STRING, 'size' => 255],
+            'description' => ['type' => self::TYPE_STRING, 'size' => 255],
+            'options' => ['type' => self::TYPE_STRING, 'size' => 255],
+            'fullscreen' => ['type' => self::TYPE_BOOL],
             'active' => ['type' => self::TYPE_BOOL]
         ],
     ];
@@ -99,32 +93,63 @@ class VideoBlock extends ObjectModel
     {
         return [
             'id_category' => $this->id_category,
-            'block_title' => $this->block_title,
-            'block_subtitle' => $this->block_subtitle,
-            'video_path' => $this->video_path,
-            'video_title' => $this->video_title,
-            'video_options' => $this->video_options,
-            'video_fullscreen' => $this->video_fullscreen,
+            'title' => $this->title,
+            'subtitle' => $this->subtitle,
+            'url' => $this->url,
+            'description' => $this->description,
+            'options' => $this->options,
+            'fullscreen' => $this->fullscreen,
             'active' => $this->active
         ];
     }
 
     /**
-     * @return bool|void
+     * @param array $ids
+     * @return bool
      * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
      */
-    public function toggleFullscreen()
+    public function duplicateSelection(array $ids): bool
     {
-        if (!Validate::isTableOrIdentifier(VideoBlock::$definition['primary'])
-            || !Validate::isTableOrIdentifier(VideoBlock::$definition['table'])) {
-            die(Tools::displayError());
-        } else if (!key_exists('video_fullscreen', (array)$this)) {
-            die(Tools::displayError());
+        $result = true;
+        foreach ($ids as $id) {
+            $this->id = (int)$id;
+            $result = $result && $this->duplicateObject()->save();
         }
 
-        return Db::getInstance()->Execute('
-		    UPDATE `' . pSQL(_DB_PREFIX_ . VideoBlock::$definition['table']) . '`
-		    SET `video_fullscreen` = !`video_fullscreen`
-		    WHERE `' . pSQL(VideoBlock::$definition['primary']) . '` = ' . intval($this->id));
+        return $result;
+    }
+
+    /**
+     * @param array $ids
+     * @param bool $status
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function activeSelection(array $ids, bool $status): bool
+    {
+        $result = true;
+        foreach ($ids as $id) {
+            $videoblock = new VideoBlock($id);
+            $videoblock->setFieldsToUpdate(['active' => true]);
+            $videoblock->active = $status;
+            $result = $result && $videoblock->update(false);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return bool
+     * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
+     */
+    public function toggleFullscreen(): bool
+    {
+        $this->setFieldsToUpdate(['fullscreen' => true]);
+        $this->fullscreen = !(int)$this->fullscreen;
+
+        return $this->update(false);
     }
 }

@@ -22,32 +22,32 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\CommandHandler;
 
-use AdVideoBlock\Domain\VideoBlock\Command\DeleteBulkVideoBlockCommand;
-use AdVideoBlock\Domain\VideoBlock\Exception\CannotDeleteBulkVideoBlockException;
+use AdVideoBlock\Domain\VideoBlock\Command\DuplicateBulkVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Exception\CannotDuplicateBulkVideoBlockException;
 use AdVideoBlock\Model\VideoBlock;
 use PrestaShopException;
 
-class DeleteBulkVideoBlockHandler
+class DuplicateBulkVideoBlockHandler
 {
     /**
-     * @param DeleteBulkVideoBlockCommand $command
+     * @param DuplicateBulkVideoBlockCommand $command
      * @return void
-     * @throws CannotDeleteBulkVideoBlockException
+     * @throws CannotDuplicateBulkVideoBlockException
      */
-    public function handle(DeleteBulkVideoBlockCommand $command): void
+    public function handle(DuplicateBulkVideoBlockCommand $command): void
     {
         $ids = $command->getId()->getValue();
         $videoblock = new VideoBlock();
 
         try {
-            if (false === $videoblock->deleteSelection($ids)) {
-                throw new CannotDeleteBulkVideoBlockException(
-                    sprintf('Failed to delete videoblocks with ids "%s"', implode(', ', $ids))
+            if (false === $videoblock->duplicateSelection($ids)) {
+                throw new CannotDuplicateBulkVideoBlockException(
+                    sprintf('Failed to duplicate videoblocks with ids "%s"', implode(', ', $ids))
                 );
             }
         } catch (PrestaShopException $exception) {
-            throw new CannotDeleteBulkVideoBlockException(
-                'An unexpected error occurred when delete videoblocks'
+            throw new CannotDuplicateBulkVideoBlockException(
+                'An unexpected error occurred when duplicate videoblocks'
             );
         }
     }

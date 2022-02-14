@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace AdVideoBlock\Repository;
 
 use Doctrine\DBAL\Connection;
-use PDO;
 
 class VideoBlockRepository
 {
@@ -35,82 +34,53 @@ class VideoBlockRepository
     /**
      * @var string the Database name.
      */
-    private $database_name;
+    private $databaseName;
 
     /**
-     * @param Connection $connection
-     * @param $database_prefix
+     * @param Connection|Object $connection
+     * @param string $databasePrefix
      */
-    public function __construct(Connection $connection, $database_prefix)
+    public function __construct(Connection $connection, string $databasePrefix = 'ps_')
     {
         $this->connection = $connection;
-        $this->database_name = $database_prefix . 'ad_videoblock';
+        $this->databaseName = $databasePrefix . 'ad_videoblock';
     }
 
     /**
+     * @param array $params
      * @return array
      */
-    public function findAll(): array
+    public function findBy(array $params): array
     {
         $query = $this->connection->createQueryBuilder();
 
-        $query
-            ->select('*')
-            ->from($this->database_name)
-        ;
+        $query->select('*')
+            ->from($this->databaseName);
 
-        return $query->execute()->fetchAll();
-    }
-
-    /**
-     * @param int $id
-     * @return array
-     */
-    public function findById(int $id): array
-    {
-        $query = $this->connection->createQueryBuilder();
-
-        $query
-            ->select('*')
-            ->from($this->database_name)
-            ->where('`id_ad_videoblock` = :id')
-        ;
-        $query->setParameter('id', $id);
+        foreach ($params as $key => $param) {
+            $query->andWhere("`$key` = :$key")
+                ->setParameter($key, $param);
+        }
 
         return $query->execute()->fetch();
     }
 
     /**
-     * @param int $id
+     * @param array $params
      * @return array
      */
-    public function findAllByCategoryId(int $id): array
+    public function findAllBy(array $params): array
     {
         $query = $this->connection->createQueryBuilder();
 
-        $query
-            ->select('*')
-            ->from($this->database_name)
-            ->where('`id_category` = :id')
-        ;
-        $query->setParameter('id', $id);
+        $query->select('*')
+            ->from($this->databaseName);
+
+        foreach ($params as $key => $param) {
+            $query->andWhere("`$key` = :$key")
+                ->setParameter($key, $param);
+        }
 
         return $query->execute()->fetchAll();
-    }
-
-    /**
-     * @return int
-     */
-    public function findLastId(): int
-    {
-        $query = $this->connection->createQueryBuilder();
-
-        $query
-            ->select('id_ad_videoblock')
-            ->from($this->database_name)
-            ->orderBy('id_ad_videoblock', 'DESC')
-        ;
-
-        return (int)$query->execute()->fetch(PDO::FETCH_COLUMN);
     }
 }

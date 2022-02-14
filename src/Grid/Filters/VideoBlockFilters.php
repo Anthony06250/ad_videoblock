@@ -25,10 +25,10 @@ namespace AdVideoBlock\Grid\Filters;
 use AdVideoBlock\Grid\Factory\VideoBlockGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
-class VideoBlockFilters extends Filters
+final class VideoBlockFilters extends Filters
 {
     /**
-     * -> TODO: Filter not apply... WHY ???
+     * -> TODO: Filter getDefaults not work... WHY ???
      */
 
     /**

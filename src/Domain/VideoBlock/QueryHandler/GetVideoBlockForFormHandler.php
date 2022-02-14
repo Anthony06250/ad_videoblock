@@ -52,7 +52,7 @@ class GetVideoBlockForFormHandler
         }
 
         return new VideoBlockForForm(
-            $this->repository->findById($query->getId()->getValue())
+            $this->repository->findBy(['id_ad_videoblock' => $query->getId()->getValue()])
         );
     }
 }

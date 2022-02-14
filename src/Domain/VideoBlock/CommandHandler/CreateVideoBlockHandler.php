@@ -28,7 +28,7 @@ use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
 use AdVideoBlock\Model\VideoBlock;
 use PrestaShopException;
 
-class CreateVideoBlockHandler extends AbstractVideoBlockHandler
+class CreateVideoBlockHandler
 {
     /**
      * @param CreateVideoBlockCommand $command
@@ -53,6 +53,6 @@ class CreateVideoBlockHandler extends AbstractVideoBlockHandler
             );
         }
 
-        return new VideoBlockId((int)$videoblock->id);
+        return $command->getId()->setValue((int)$videoblock->id);
     }
 }

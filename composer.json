@@ -1,16 +1,23 @@
 {
-  "name": "ad/videoblock",
-  "license": "AFL-3.0",
-  "autoload": {
-    "psr-4": {
-      "AdVideoBlock\\": "src/"
-    },
-    "classmap": [
-      "ad_videoblock.php"
+    "name": "ad/videoblock",
+    "description": "View videoblock in homepage and category page.",
+    "license": "AFL-3.0",
+    "authors": [
+        {
+            "name": "Anthony DURET",
+            "email": "anthony.duret@outlook.fr"
+        }
     ],
-    "config": {
-      "prepend-autoloader": false
-    },
-    "type": "prestashop-module"
-  }
+    "autoload": {
+        "psr-4": {
+            "AdVideoBlock\\": "src/"
+        },
+        "classmap": [
+            "ad_videoblock.php"
+        ],
+        "config": {
+            "prepend-autoloader": false
+        },
+        "type": "prestashop-module"
+    }
 }

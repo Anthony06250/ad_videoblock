@@ -6,21 +6,21 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitaf2aa7d31a5026f9dc7ac710eaa1e59b
 {
-    public static $prefixLengthsPsr4 = array(
-        'A' =>
-            array(
-                'AdVideoBlock\\' => 13,
-            ),
+    public static $prefixLengthsPsr4 = array (
+        'A' => 
+        array (
+            'AdVideoBlock\\' => 13,
+        ),
     );
 
-    public static $prefixDirsPsr4 = array(
-        'AdVideoBlock\\' =>
-            array(
-                0 => __DIR__ . '/../..' . '/src',
-            ),
+    public static $prefixDirsPsr4 = array (
+        'AdVideoBlock\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
     );
 
-    public static $classMap = array(
+    public static $classMap = array (
         'Ad_VideoBlock' => __DIR__ . '/../..' . '/ad_videoblock.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );

@@ -31,14 +31,14 @@ final class VideoBlockFormDataProvider implements FormDataProviderInterface
     /**
      * @var CommandBusInterface
      */
-    private $command_bus;
+    private $commandBus;
 
     /**
-     * @param CommandBusInterface $command_bus
+     * @param CommandBusInterface $commandBus
      */
-    public function __construct(CommandBusInterface $command_bus)
+    public function __construct(CommandBusInterface $commandBus)
     {
-        $this->command_bus = $command_bus;
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -47,10 +47,10 @@ final class VideoBlockFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id): array
     {
-        $response = $this->command_bus->handle(new GetVideoBlockForForm($id));
+        $response = $this->commandBus->handle(new GetVideoBlockForForm($id));
         $data = $response->getData();
         if ($id) {
-            $data['video_path'] = 'https://youtube.com/watch?v=' . $data['video_path'];
+            $data['url'] = 'https://youtube.com/watch?v=' . $data['url'];
         }
 
         return $data;

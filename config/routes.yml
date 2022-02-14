@@ -14,7 +14,7 @@ admin_ad_videoblock_search:
         gridDefinitionFactoryServiceId: advideoblock.grid.factory.videoblock_grid_definition_factory
         redirectRoute: admin_ad_videoblock_index
         _legacy_controller: 'AdminVideoBlock'
-        _legacy_link: 'AdminVideoBlock:search'
+        _legacy_link: 'AdminVideoBlock:submitFiltervideoblock'
 
 admin_ad_videoblock_create:
   path: /new
@@ -46,18 +46,11 @@ admin_ad_videoblock_delete_bulk:
     _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::deleteBulkAction'
     _legacy_controller: 'AdminVideoBlock'
 
-admin_ad_videoblock_enable_bulk:
-  path: /enable-bulk
+admin_ad_videoblock_active_bulk:
+  path: /active-bulk
   methods: [POST]
   defaults:
-    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::enableBulkAction'
-    _legacy_controller: 'AdminVideoBlock'
-
-admin_ad_videoblock_disable_bulk:
-  path: /disable-bulk
-  methods: [POST]
-  defaults:
-    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::disableBulkAction'
+    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::activeBulkAction'
     _legacy_controller: 'AdminVideoBlock'
 
 admin_ad_videoblock_duplicate_bulk:

@@ -46,7 +46,7 @@ class VideoBlockType extends TranslatorAwareType
                 'label' => $this->trans('Category', 'Modules.Advideoblock.Admin'),
                 'disabled_values' => [0]
             ])
-            ->add('block_title', TextType::class, [
+            ->add('title', TextType::class, [
                 'required' => false,
                 'constraints' => [
                     new Length(['max' => 255])
@@ -56,7 +56,7 @@ class VideoBlockType extends TranslatorAwareType
                     'placeholder' => $this->trans('The block title', 'Modules.Advideoblock.Admin')
                 ]
             ])
-            ->add('block_subtitle', TextType::class, [
+            ->add('subtitle', TextType::class, [
                 'required' => false,
                 'constraints' => [
                     new Length(['max' => 255])
@@ -66,27 +66,27 @@ class VideoBlockType extends TranslatorAwareType
                     'placeholder' => $this->trans('The block subtitle', 'Modules.Advideoblock.Admin')
                 ]
             ])
-            ->add('video_path', TextType::class, [
+            ->add('url', TextType::class, [
                 'constraints' => [
                     new Length(['max' => 255]),
                     new Url()
                 ],
                 'attr' => [
-                    'label' => $this->trans('Video path', 'Modules.Advideoblock.Admin'),
-                    'placeholder' => $this->trans('The video path', 'Modules.Advideoblock.Admin')
+                    'label' => $this->trans('Video url', 'Modules.Advideoblock.Admin'),
+                    'placeholder' => $this->trans('The video url', 'Modules.Advideoblock.Admin')
                 ]
             ])
-            ->add('video_title', TextType::class, [
+            ->add('description', TextType::class, [
                 'required' => false,
                 'constraints' => [
                     new Length(['max' => 255])
                 ],
                 'attr' => [
-                    'label' => $this->trans('Video title', 'Modules.Advideoblock.Admin'),
-                    'placeholder' => $this->trans('The video title', 'Modules.Advideoblock.Admin')
+                    'label' => $this->trans('Video description', 'Modules.Advideoblock.Admin'),
+                    'placeholder' => $this->trans('The video description', 'Modules.Advideoblock.Admin')
                 ]
             ])
-            ->add('video_options', TextType::class, [
+            ->add('options', TextType::class, [
                 'required' => false,
                 'constraints' => [
                     new Length(['max' => 255])
@@ -96,7 +96,7 @@ class VideoBlockType extends TranslatorAwareType
                     'placeholder' => $this->trans('The video options', 'Modules.Advideoblock.Admin')
                 ]
             ])
-            ->add('video_fullscreen', SwitchType::class, [
+            ->add('fullscreen', SwitchType::class, [
                 'label' => $this->trans('Video fullscreen', 'Modules.Advideoblock.Admin'),
                 'choices' => [
                     'OFF' => false,

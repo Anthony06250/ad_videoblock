@@ -22,36 +22,34 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\CommandHandler;
 
-use AdVideoBlock\Domain\VideoBlock\Exception\CannotCreateVideoBlockException;
+use AdVideoBlock\Domain\VideoBlock\Command\ActiveBulkVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Exception\CannotActiveBulkVideoBlockException;
 use AdVideoBlock\Model\VideoBlock;
 use PrestaShopException;
 
-class AbstractVideoBlockHandler
+class ActiveBulkVideoBlockHandler
 {
     /**
-     * @param int $id
-     * @return VideoBlock
-     * @throws CannotCreateVideoBlockException
+     * @param ActiveBulkVideoBlockCommand $command
+     * @return void
+     * @throws CannotActiveBulkVideoBlockException
      */
-    protected function createVideoBlock(int $id): VideoBlock
+    public function handle(ActiveBulkVideoBlockCommand $command): void
     {
-        try {
-            $videoblock = new VideoBlock();
-            $videoblock->id_ad_videoblock = $id;
-            $videoblock->id_category = 0;
-            $videoblock->video_fullscreen = 1;
+        $ids = $command->getId()->getValue();
+        $status = $command->getStatus();
+        $videoblock = new VideoBlock();
 
-            if (false === $videoblock->save()) {
-                throw new CannotCreateVideoBlockException(
-                    sprintf('An error occurred when creating videoblock with id "%s"', $id)
+        try {
+            if (false === $videoblock->activeSelection($ids, $status)) {
+                throw new CannotActiveBulkVideoBlockException(
+                    sprintf('Failed to enable videoblocks with ids "%s"', implode(', ', $ids))
                 );
             }
         } catch (PrestaShopException $exception) {
-            throw new CannotCreateVideoBlockException(
-                sprintf('An unexpected error occurred when creating videoblock with id "%s"', $id), 0, $exception
+            throw new CannotActiveBulkVideoBlockException(
+                'An unexpected error occurred when enable videoblocks'
             );
         }
-
-        return $videoblock;
     }
 }

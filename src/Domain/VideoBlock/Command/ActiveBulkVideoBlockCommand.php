@@ -20,8 +20,30 @@
 
 declare(strict_types=1);
 
-namespace AdVideoBlock\Domain\VideoBlock\Exception;
+namespace AdVideoBlock\Domain\VideoBlock\Command;
 
-class CannotDeleteVideoBlockException extends VideoBlockException
+class ActiveBulkVideoBlockCommand extends AbstractVideoBlockCommand
 {
+    /**
+     * @var bool
+     */
+    private $status;
+
+    /**
+     * @param array $ids
+     * @param bool $status
+     */
+    public function __construct(array $ids, bool $status)
+    {
+        parent::__construct($ids);
+        $this->status = $status;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getStatus(): bool
+    {
+        return $this->status;
+    }
 }

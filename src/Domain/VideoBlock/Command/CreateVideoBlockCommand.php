@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\Command;
 
-class CreateVideoBlockCommand
+class CreateVideoBlockCommand extends AbstractVideoBlockCommand
 {
     /**
      * @var int
@@ -32,32 +32,32 @@ class CreateVideoBlockCommand
     /**
      * @var string
      */
-    private $block_title;
+    private $title;
 
     /**
      * @var string
      */
-    private $block_subtitle;
+    private $subtitle;
 
     /**
      * @var string
      */
-    private $video_path;
+    private $url;
 
     /**
      * @var string
      */
-    private $video_title;
+    private $description;
 
     /**
      * @var string
      */
-    private $video_options;
+    private $options;
 
     /**
      * @var bool
      */
-    private $video_fullscreen;
+    private $fullscreen;
 
     /**
      * @var bool
@@ -71,12 +71,12 @@ class CreateVideoBlockCommand
     {
         return [
             'id_category' => $this->id_category,
-            'block_title' => $this->block_title,
-            'block_subtitle' => $this->block_subtitle,
-            'video_path' => $this->video_path,
-            'video_title' => $this->video_title,
-            'video_options' => $this->video_options,
-            'video_fullscreen' => $this->video_fullscreen,
+            'title' => $this->title,
+            'subtitle' => $this->subtitle,
+            'url' => $this->url,
+            'description' => $this->description,
+            'options' => $this->options,
+            'fullscreen' => $this->fullscreen,
             'active' => $this->active
         ];
     }
@@ -88,12 +88,12 @@ class CreateVideoBlockCommand
     public function fromArray(array $data): CreateVideoBlockCommand
     {
         $this->id_category = $data['id_category'];
-        $this->block_title = $data['block_title'];
-        $this->block_subtitle = $data['block_subtitle'];
-        $this->video_path = $data['video_path'];
-        $this->video_title = $data['video_title'];
-        $this->video_options = $data['video_options'];
-        $this->video_fullscreen = $data['video_fullscreen'];
+        $this->title = $data['title'];
+        $this->subtitle = $data['subtitle'];
+        $this->url = $data['url'];
+        $this->description = $data['description'];
+        $this->options = $data['options'];
+        $this->fullscreen = $data['fullscreen'];
         $this->active = $data['active'];
 
         return $this;

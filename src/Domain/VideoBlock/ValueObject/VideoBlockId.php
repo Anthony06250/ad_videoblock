@@ -27,14 +27,14 @@ class VideoBlockId
     /**
      * @var mixed
      */
-    private $id_videoblock;
+    private $id;
 
     /**
-     * @param mixed $id_videoblock
+     * @param mixed $id
      */
-    public function __construct($id_videoblock)
+    public function __construct($id)
     {
-        $this->id_videoblock = $id_videoblock;
+        $this->id = $id;
     }
 
     /**
@@ -42,6 +42,17 @@ class VideoBlockId
      */
     public function getValue()
     {
-        return $this->id_videoblock;
+        return $this->id;
+    }
+
+    /**
+     * @param $id
+     * @return VideoBlockId
+     */
+    public function setValue($id): VideoBlockId
+    {
+        $this->id = $id;
+
+        return $this;
     }
 }

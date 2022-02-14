@@ -27,7 +27,6 @@ use AdVideoBlock\Domain\VideoBlock\Command\EditVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Exception\VideoBlockException;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\FormDataHandlerInterface;
-use PrestaShopException;
 
 final class VideoBlockFormDataHandler implements FormDataHandlerInterface
 {
@@ -52,7 +51,7 @@ final class VideoBlockFormDataHandler implements FormDataHandlerInterface
     public function create(array $data): int
     {
         $command = new CreateVideoBlockCommand();
-        $data['video_path'] = $this->getYoutubeIdFromUrl($data['video_path']);
+        $data['url'] = $this->getYoutubeIdFromUrl($data['url']);
         $videoblock = $this->commandBus->handle($command->fromArray($data));
 
         return $videoblock->getValue();
@@ -67,7 +66,7 @@ final class VideoBlockFormDataHandler implements FormDataHandlerInterface
     public function update($id, array $data): void
     {
         $command = new EditVideoBlockCommand((int)$id);
-        $data['video_path'] = $this->getYoutubeIdFromUrl($data['video_path']);
+        $data['url'] = $this->getYoutubeIdFromUrl($data['url']);
 
         $this->commandBus->handle($command->fromArray($data));
     }
@@ -87,12 +86,12 @@ final class VideoBlockFormDataHandler implements FormDataHandlerInterface
             ~x';
         // Source : https://stackoverflow.com/questions/13476060/validating-youtube-url-using-regex
 
-        if (!preg_match($regex, $url, $matches)) {
+        if (!preg_match($regex, $url, $result)) {
             throw new VideoBlockException(
                 sprintf('%s is not a valid Youtube url.', $url)
             );
         }
 
-        return $matches[1];
+        return $result[1];
     }
 }

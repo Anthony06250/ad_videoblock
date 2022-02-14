@@ -24,6 +24,8 @@ namespace AdVideoBlock\Controller;
 
 use AdVideoBlock\Domain\VideoBlock\Command\DeleteBulkVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Command\DuplicateBulkVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Command\ActiveBulkVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\ToggleStatusVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Exception\VideoBlockException;
@@ -37,10 +39,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Ad_VideoBlockController extends FrameworkBundleAdminController
 {
-    /**
-     * -> TODO: Make enableBulkAction, disableBulkAction and duplicateBulkAction functions
-     */
-
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      * @param VideoBlockFilters $filters
@@ -146,11 +144,11 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
      */
     public function deleteBulkAction(Request $request): RedirectResponse
     {
-        $videoblockIds = $request->request->get('videoblock_bulk_action');
+        $ids = $request->request->get('videoblock_bulk_action');
         $handler = $this->get('advideoblock.domain.videoblock.command_handler.delete_bulk_videoblock_handler');
 
         try {
-            $handler->handle(new DeleteBulkVideoBlockCommand($videoblockIds));
+            $handler->handle(new DeleteBulkVideoBlockCommand($ids));
             $this->addFlash('success', $this->trans('The selection has been successfully deleted.', 'Modules.Advideoblock.Admin'));
         } catch (VideoBlockException $exception) {
             $this->addFlash('error', $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'));
@@ -160,29 +158,43 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
      * @param Request $request
      * @return RedirectResponse
      */
-    public function enableBulkAction(Request $request): RedirectResponse
+    public function activeBulkAction(Request $request): RedirectResponse
     {
+        $ids = $request->request->get('videoblock_bulk_action');
+        $status = (bool)$request->get('status');
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.active_bulk_videoblock_handler');
+
+        try {
+            $handler->handle(new ActiveBulkVideoBlockCommand($ids, $status));
+            $this->addFlash('success', $this->trans('The selection has been successfully ' . ($status ? 'enabled.' : 'disabled'), 'Modules.Advideoblock.Admin'));
+        } catch (VideoBlockException $exception) {
+            $this->addFlash('error', $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'));
+        }
+
         return $this->redirectToRoute('admin_ad_videoblock_index');
     }
 
     /**
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function disableBulkAction(Request $request): RedirectResponse
-    {
-        return $this->redirectToRoute('admin_ad_videoblock_index');
-    }
-
-    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="Access denied.")
      * @param Request $request
      * @return RedirectResponse
      */
     public function duplicateBulkAction(Request $request): RedirectResponse
     {
+        $ids = $request->request->get('videoblock_bulk_action');
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.duplicate_bulk_videoblock_handler');
+
+        try {
+            $handler->handle(new DuplicateBulkVideoBlockCommand($ids));
+            $this->addFlash('success', $this->trans('The selection has been successfully duplicated.', 'Modules.Advideoblock.Admin'));
+        } catch (VideoBlockException $exception) {
+            $this->addFlash('error', $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'));
+        }
+
         return $this->redirectToRoute('admin_ad_videoblock_index');
     }
 
