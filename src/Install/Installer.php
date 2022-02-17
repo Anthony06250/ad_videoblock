@@ -22,33 +22,46 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Install;
 
+use Context;
 use Db;
+use Language;
 use Module;
 use PrestaShopDatabaseException;
+use Tools;
 
-class Installer
+final class Installer
 {
+    /**
+     * -> TODO: Error in install.sql file - executeQueries() always return true for fix
+     */
+
+    /**
+     * @var Module
+     */
+    private $module;
+
     /**
      * @var FixturesInstaller
      */
     private $fixturesInstaller;
 
     /**
+     * @param Module $module
      * @param FixturesInstaller $fixturesInstaller
      */
-    public function __construct(FixturesInstaller $fixturesInstaller)
+    public function __construct(Module $module, FixturesInstaller $fixturesInstaller)
     {
+        $this->module = $module;
         $this->fixturesInstaller = $fixturesInstaller;
     }
 
     /**
-     * @param Module $module
      * @return bool
      * @throws PrestaShopDatabaseException
      */
-    public function install(Module $module): bool
+    public function install(): bool
     {
-        if (!$this->registerHooks($module)
+        if (!$this->registerHooks()
             || !$this->installDatabase()) {
             return false;
         }
@@ -67,10 +80,9 @@ class Installer
     }
 
     /**
-     * @param Module $module
      * @return bool
      */
-    private function registerHooks(Module $module): bool
+    private function registerHooks(): bool
     {
         $hooks = [
             'displayAdminOrderTop',
@@ -79,7 +91,7 @@ class Installer
             'displayContentWrapperTop'
         ];
 
-        return $module->registerHook($hooks);
+        return $this->module->registerHook($hooks);
     }
 
     /**
@@ -87,22 +99,11 @@ class Installer
      */
     private function installDatabase(): bool
     {
-        $queries = [
-            'CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'ad_videoblock` (
-               `id_ad_videoblock` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-               `id_category` int(10) UNSIGNED NOT NULL,
-               `title` varchar(255) DEFAULT NULL,
-               `subtitle` varchar(255) DEFAULT NULL,
-               `url` varchar(255) NOT NULL,
-               `description` varchar(255) DEFAULT NULL,
-               `options` varchar(255) DEFAULT NULL,
-               `fullscreen` int(2) UNSIGNED NOT NULL,
-               `active` int(2) UNSIGNED NOT NULL,
-               PRIMARY KEY  (`id_ad_videoblock`)
-            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;'
-        ];
+        if (file_exists(dirname(__FILE__) . '/Sql/install.sql')) {
+            return $this->loadSqlFile(dirname(__FILE__) . '/Sql/install.sql');
+        }
 
-        return $this->executeQueries($queries);
+        return false;
     }
 
     /**
@@ -110,9 +111,22 @@ class Installer
      */
     private function uninstallDatabase(): bool
     {
-        $queries = [
-            'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'ad_videoblock`',
-        ];
+        if (file_exists(dirname(__FILE__) . '/Sql/uninstall.sql')) {
+            return $this->loadSqlFile(dirname(__FILE__) . '/Sql/uninstall.sql');
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $file
+     * @return bool
+     */
+    private function loadSqlFile(string $file): bool
+    {
+        $queries = Tools::file_get_contents($file);
+        $queries = str_replace(['PREFIX_', 'ENGINE_TYPE'], [_DB_PREFIX_, _MYSQL_ENGINE_], $queries);
+        $queries = preg_split("/;\s*[\r\n]+/", $queries);
 
         return $this->executeQueries($queries);
     }
@@ -123,12 +137,39 @@ class Installer
      */
     private function executeQueries(array $queries): bool
     {
+        $result = true;
+
         foreach ($queries as $query) {
-            if (!Db::getInstance()->execute($query)) {
-                return false;
+            if (!empty($query)) {
+                $result &= Db::getInstance()->execute(trim($query));
             }
         }
 
         return true;
+//        return $result;
+    }
+
+    /**
+     * @return array[]
+     */
+    public static function getTabs(): array
+    {
+        $tabNames = [];
+
+        foreach (Language::getLanguages(true) as $lang) {
+            $tabNames[$lang['locale']] = Context::getContext()->getTranslator()->trans('Video Block', [], 'Modules.Advideoblock.Admin', $lang['locale']);
+        }
+
+        return [
+            [
+                'route_name' => 'admin_ad_videoblock_index',
+                'class_name' => 'AdminVideoBlock',
+                'visible' => true,
+                'name' => $tabNames,
+                'parent_class_name' => 'AdminParentThemes',
+                'wording' => 'Video Block',
+                'wording_domain' => 'Modules.Advideoblock.Admin'
+            ],
+        ];
     }
 }

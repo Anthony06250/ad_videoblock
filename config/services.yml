@@ -1,104 +1,47 @@
 services:
-    advideoblock.repository.videoblock_repository:
+    # VideoBlock repository
+    advideoblock.repository.videoblock:
         class: 'AdVideoBlock\Repository\VideoBlockRepository'
         arguments: [ '@doctrine.dbal.default_connection', '%database_prefix%' ]
 
-    advideoblock.form.videoblock_form_type:
+    # VideoBlock form factory
+    advideoblock.form.type.videoblock:
         class: 'AdVideoBlock\Form\VideoBlockType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - name: form.type
 
-    advideoblock.form.videoblock_form_data_provider:
+    advideoblock.form.data_provider.videoblock:
         class: 'AdVideoBlock\Form\VideoBlockFormDataProvider'
         arguments:
             - '@prestashop.core.query_bus'
 
-    advideoblock.form.videoblock_form_builder:
+    advideoblock.form.form_builder.videoblock:
         class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
         factory: 'prestashop.core.form.builder.form_builder_factory:create'
         arguments:
             - 'AdVideoBlock\Form\VideoBlockType'
-            - '@advideoblock.form.videoblock_form_data_provider'
+            - '@advideoblock.form.data_provider.videoblock'
 
-    advideoblock.form.videoblock_form_data_handler:
+    advideoblock.form.data_handler.videoblock:
         class: 'AdVideoBlock\Form\VideoBlockFormDataHandler'
         arguments:
             - '@prestashop.core.command_bus'
 
-    advideoblock.form.videoblock_form_handler:
+    advideoblock.form.form_handler.videoblock:
         class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler'
         factory: 'prestashop.core.form.identifiable_object.handler.form_handler_factory:create'
         arguments:
-            - '@advideoblock.form.videoblock_form_data_handler'
+            - '@advideoblock.form.data_handler.videoblock'
 
-    advideoblock.domain.videoblock.query_handler.get_videoblock_for_form_handler:
-        class: 'AdVideoBlock\Domain\VideoBlock\QueryHandler\GetVideoBlockForFormHandler'
-        arguments:
-            - '@advideoblock.repository.videoblock_repository'
-        tags:
-            -   name: tactician.handler
-                command: 'AdVideoBlock\Domain\VideoBlock\Query\GetVideoBlockForForm'
-
-    advideoblock.domain.videoblock.command_handler.create_videoblock_handler:
-        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\CreateVideoBlockHandler'
-        arguments:
-            - '@advideoblock.repository.videoblock_repository'
-        tags:
-            -   name: tactician.handler
-                command: 'AdVideoBlock\Domain\VideoBlock\Command\CreateVideoBlockCommand'
-
-    advideoblock.domain.videoblock.command_handler.edit_videoblock_handler:
-        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\EditVideoBlockHandler'
-        arguments:
-            - '@advideoblock.repository.videoblock_repository'
-        tags:
-            -   name: tactician.handler
-                command: 'AdVideoBlock\Domain\VideoBlock\Command\EditVideoBlockCommand'
-
-    advideoblock.domain.videoblock.command_handler.delete_videoblock_handler:
-        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DeleteVideoBlockHandler'
-        tags:
-            -   name: tactician.handler
-                command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand'
-
-    advideoblock.domain.videoblock.command_handler.delete_bulk_videoblock_handler:
-        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DeleteBulkVideoBlockHandler'
-        tags:
-            -   name: tactician.handler
-                command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteBulkVideoBlockCommand'
-
-    advideoblock.domain.videoblock.command_handler.duplicate_bulk_videoblock_handler:
-        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DuplicateBulkVideoBlockHandler'
-        tags:
-            -   name: tactician.handler
-                command: 'AdVideoBlock\Domain\VideoBlock\Command\DuplicateBulkVideoBlockCommand'
-
-    advideoblock.domain.videoblock.command_handler.active_bulk_videoblock_handler:
-        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ActiveBulkVideoBlockHandler'
-        tags:
-            -   name: tactician.handler
-                command: 'AdVideoBlock\Domain\VideoBlock\Command\ActiveBulkVideoBlockCommand'
-
-    advideoblock.domain.videoblock.command_handler.toggle_fullscreen_videoblock_handler:
-        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleFullscreenVideoBlockHandler'
-        tags:
-            -   name: tactician.handler
-                command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand'
-
-    advideoblock.domain.videoblock.command_handler.toggle_status_videoblock_handler:
-        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleStatusVideoBlockHandler'
-        tags:
-            -   name: tactician.handler
-                command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleStatusVideoBlockCommand'
-
-    advideoblock.grid.factory.videoblock_grid_definition_factory:
+    # VideoBlock grid factory
+    advideoblock.grid.factory.definition.videoblock:
         class: 'AdVideoBlock\Grid\Factory\VideoBlockGridDefinitionFactory'
         parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
         public: true
 
-    advideoblock.grid.query.videoblock_query_builder:
+    advideoblock.grid.query_builder.videoblock:
         class: 'AdVideoBlock\Grid\Query\VideoBlockQueryBuilder'
         parent: 'prestashop.core.grid.abstract_query_builder'
         public: true
@@ -107,19 +50,96 @@ services:
             - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
             - '@prestashop.core.query.doctrine_search_criteria_applicator'
 
-    advideoblock.grid.data.videoblock_grid_data_provider:
+    advideoblock.grid.data_provider.videoblock:
         class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
         arguments:
-            - '@advideoblock.grid.query.videoblock_query_builder'
+            - '@advideoblock.grid.query_builder.videoblock'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
             - 'videoblock'
 
-    advideoblock.grid.factory.videoblock_grid_factory:
+    advideoblock.grid.factory.videoblock:
         class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
         public: true
         arguments:
-            - '@advideoblock.grid.factory.videoblock_grid_definition_factory'
-            - '@advideoblock.grid.data.videoblock_grid_data_provider'
+            - '@advideoblock.grid.factory.definition.videoblock'
+            - '@advideoblock.grid.data_provider.videoblock'
             - '@prestashop.core.grid.filter.form_factory'
             - '@prestashop.core.hook.dispatcher'
+
+    # VideoBlock domain query handler
+    advideoblock.domain.videoblock.query_handler.get_for_form:
+        class: 'AdVideoBlock\Domain\VideoBlock\QueryHandler\GetVideoBlockForFormHandler'
+        arguments:
+            - '@advideoblock.repository.videoblock'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Query\GetVideoBlockForForm'
+
+    advideoblock.domain.videoblock.query_handler.get_for_hook:
+        class: 'AdVideoBlock\Domain\VideoBlock\QueryHandler\GetVideoBlockForHookHandler'
+        arguments:
+            - '@advideoblock.repository.videoblock'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Query\GetVideoBlockForHook'
+
+    # VideoBlock domain action handler
+    advideoblock.domain.videoblock.command_handler.create:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\CreateVideoBlockHandler'
+        arguments:
+            - '@advideoblock.repository.videoblock'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\CreateVideoBlockCommand'
+
+    advideoblock.domain.videoblock.command_handler.edit:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\EditVideoBlockHandler'
+        arguments:
+            - '@advideoblock.repository.videoblock'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\EditVideoBlockCommand'
+
+    advideoblock.domain.videoblock.command_handler.delete:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DeleteVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand'
+
+    advideoblock.domain.videoblock.command_handler.toggle_fullscreen:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleFullscreenVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand'
+
+    advideoblock.domain.videoblock.command_handler.toggle_active:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ToggleActiveVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\ToggleActiveVideoBlockCommand'
+
+    # VideoBlock domain bulk handler
+    advideoblock.domain.videoblock.command_handler.duplicate_bulk:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DuplicateBulkVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\DuplicateBulkVideoBlockCommand'
+
+    advideoblock.domain.videoblock.command_handler.active_bulk:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\ActiveBulkVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\ActiveBulkVideoBlockCommand'
+
+    advideoblock.domain.videoblock.command_handler.fullscreen_bulk:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\FullscreenBulkVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\FullscreenBulkVideoBlockCommand'
+
+    advideoblock.domain.videoblock.command_handler.delete_bulk:
+        class: 'AdVideoBlock\Domain\VideoBlock\CommandHandler\DeleteBulkVideoBlockHandler'
+        tags:
+            -   name: tactician.handler
+                command: 'AdVideoBlock\Domain\VideoBlock\Command\DeleteBulkVideoBlockCommand'

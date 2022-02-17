@@ -27,27 +27,25 @@ use AdVideoBlock\Domain\VideoBlock\Exception\CannotDuplicateBulkVideoBlockExcept
 use AdVideoBlock\Model\VideoBlock;
 use PrestaShopException;
 
-class DuplicateBulkVideoBlockHandler
+final class DuplicateBulkVideoBlockHandler
 {
     /**
      * @param DuplicateBulkVideoBlockCommand $command
      * @return void
-     * @throws CannotDuplicateBulkVideoBlockException
      */
     public function handle(DuplicateBulkVideoBlockCommand $command): void
     {
         $ids = $command->getId()->getValue();
-        $videoblock = new VideoBlock();
 
         try {
-            if (false === $videoblock->duplicateSelection($ids)) {
+            if (false === (new VideoBlock())->duplicateSelection($ids)) {
                 throw new CannotDuplicateBulkVideoBlockException(
-                    sprintf('Failed to duplicate videoblocks with ids "%s"', implode(', ', $ids))
+                    sprintf('Failed to duplicate video blocks with ids "%s"', implode(', ', $ids))
                 );
             }
         } catch (PrestaShopException $exception) {
             throw new CannotDuplicateBulkVideoBlockException(
-                'An unexpected error occurred when duplicate videoblocks'
+                'An unexpected error occurred when duplicate video blocks'
             );
         }
     }

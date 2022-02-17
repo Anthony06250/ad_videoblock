@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use DomainException;
 
 class VideoBlockException extends DomainException
 {

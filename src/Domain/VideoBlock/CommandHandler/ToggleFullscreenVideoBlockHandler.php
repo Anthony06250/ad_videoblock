@@ -25,32 +25,27 @@ namespace AdVideoBlock\Domain\VideoBlock\CommandHandler;
 use AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Exception\CannotToggleFullscreenVideoBlockException;
 use AdVideoBlock\Model\VideoBlock;
-use PrestaShopDatabaseException;
 use PrestaShopException;
 
-class ToggleFullscreenVideoBlockHandler
+final class ToggleFullscreenVideoBlockHandler
 {
     /**
      * @param ToggleFullscreenVideoBlockCommand $command
      * @return void
-     * @throws CannotToggleFullscreenVideoBlockException
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
      */
     public function handle(ToggleFullscreenVideoBlockCommand $command): void
     {
         $id = $command->getId()->getValue();
-        $videoblock = new VideoBlock($id);
 
         try {
-            if (false === $videoblock->toggleFullscreen()) {
+            if (false === (new VideoBlock($id))->toggleFullscreen()) {
                 throw new CannotToggleFullscreenVideoBlockException(
-                    sprintf('Failed to toggle fullscreen for videoblock with id "%s"', $videoblock->id)
+                    sprintf('Failed to toggle fullscreen for video block with id "%s"', $id)
                 );
             }
         } catch (PrestaShopException $exception) {
             throw new CannotToggleFullscreenVideoBlockException(
-                'An unexpected error occurred when toggle fullscreen of videoblock'
+                'An unexpected error occurred when toggle fullscreen of video block'
             );
         }
     }

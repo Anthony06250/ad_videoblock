@@ -1,0 +1,28 @@
+{% if videoblocks is not empty %}
+    <section id="ad-videoblock">
+        {% for videoblock in videoblocks %}
+            {% if videoblock.title is not empty or videoblock.subtitle is not empty %}
+                <header class="ad-vb-title">
+                    {% if videoblock.title is not empty %}
+                        <h2>{{ videoblock.title }}</h2>
+                    {% endif %}
+                    {% if videoblock.subtitle is not empty %}
+                        <p>{{ videoblock.subtitle }}</p>
+                    {% endif %}
+                </header>
+            {% endif %}
+            <section class="ad-vb-content">
+                <article class="container">
+                    <figure class="ad-vb-videobox">
+                        <iframe class="ad-vb-video"
+                                src="{{ videoblock.url }}"
+                                title="{$videoblock.description}"
+                                allow="{$videoblock.options}"
+                                {% if videoblock.fullscreen == '1' %}allowfullscreen{% endif %}>
+                        </iframe>
+                    </figure>
+                </article>
+            </section>
+        {% endfor %}
+    </section>
+{% endif %}

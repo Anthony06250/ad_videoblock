@@ -24,7 +24,7 @@ namespace AdVideoBlock\Repository;
 
 use Doctrine\DBAL\Connection;
 
-class VideoBlockRepository
+final class VideoBlockRepository
 {
     /**
      * @var Connection the Database connection.

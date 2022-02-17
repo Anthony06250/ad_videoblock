@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Url;
 
-class VideoBlockType extends TranslatorAwareType
+final class VideoBlockType extends TranslatorAwareType
 {
     /**
      * @param FormBuilderInterface $builder

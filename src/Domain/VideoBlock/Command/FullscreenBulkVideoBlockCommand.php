@@ -20,8 +20,8 @@
 
 declare(strict_types=1);
 
-namespace AdVideoBlock\Domain\VideoBlock\Exception;
+namespace AdVideoBlock\Domain\VideoBlock\Command;
 
-final class CannotCreateVideoBlockException extends VideoBlockException
+final class FullscreenBulkVideoBlockCommand extends ActiveBulkVideoBlockCommand
 {
 }

@@ -22,6 +22,6 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\Exception;
 
-class CannotDeleteBulkVideoBlockException extends VideoBlockException
+final class CannotDeleteBulkVideoBlockException extends VideoBlockException
 {
 }

@@ -87,16 +87,12 @@ class CreateVideoBlockCommand extends AbstractVideoBlockCommand
      */
     public function fromArray(array $data): CreateVideoBlockCommand
     {
-        $this->id_category = $data['id_category'];
-        $this->title = $data['title'];
-        $this->subtitle = $data['subtitle'];
-        $this->url = $data['url'];
-        $this->description = $data['description'];
-        $this->options = $data['options'];
-        $this->fullscreen = $data['fullscreen'];
-        $this->active = $data['active'];
+        foreach ($data as $key => $value) {
+            if (empty($this->{$key})) {
+                $this->{$key} = $value;
+            }
+        }
 
         return $this;
     }
-
 }

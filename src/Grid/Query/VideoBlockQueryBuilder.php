@@ -28,7 +28,7 @@ use PrestaShop\PrestaShop\Core\Grid\Query\AbstractDoctrineQueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineSearchCriteriaApplicatorInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
-class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
+final class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var int
@@ -52,12 +52,7 @@ class VideoBlockQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param int $contextShopId
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      */
-    public function __construct(
-        Connection $connection,
-        string $dbPrefix,
-        int $contextLanguageId,
-        int $contextShopId,
-        DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
+    public function __construct(Connection $connection, string $dbPrefix, int $contextLanguageId, int $contextShopId, DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->contextLanguageId = $contextLanguageId;

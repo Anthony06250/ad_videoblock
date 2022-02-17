@@ -27,28 +27,26 @@ use AdVideoBlock\Domain\VideoBlock\Exception\CannotActiveBulkVideoBlockException
 use AdVideoBlock\Model\VideoBlock;
 use PrestaShopException;
 
-class ActiveBulkVideoBlockHandler
+final class ActiveBulkVideoBlockHandler
 {
     /**
      * @param ActiveBulkVideoBlockCommand $command
      * @return void
-     * @throws CannotActiveBulkVideoBlockException
      */
     public function handle(ActiveBulkVideoBlockCommand $command): void
     {
         $ids = $command->getId()->getValue();
         $status = $command->getStatus();
-        $videoblock = new VideoBlock();
 
         try {
-            if (false === $videoblock->activeSelection($ids, $status)) {
+            if (false === (new VideoBlock())->activeSelection($ids, $status)) {
                 throw new CannotActiveBulkVideoBlockException(
-                    sprintf('Failed to enable videoblocks with ids "%s"', implode(', ', $ids))
+                    sprintf('Failed to enable video blocks with ids "%s"', implode(', ', $ids))
                 );
             }
         } catch (PrestaShopException $exception) {
             throw new CannotActiveBulkVideoBlockException(
-                'An unexpected error occurred when enable videoblocks'
+                'An unexpected error occurred when enable video blocks'
             );
         }
     }

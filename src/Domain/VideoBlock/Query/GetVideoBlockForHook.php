@@ -20,8 +20,28 @@
 
 declare(strict_types=1);
 
-namespace AdVideoBlock\Domain\VideoBlock\Exception;
+namespace AdVideoBlock\Domain\VideoBlock\Query;
 
-final class CannotCreateVideoBlockException extends VideoBlockException
+final class GetVideoBlockForHook
 {
+    /**
+     * @var int
+     */
+    private $id_category;
+
+    /**
+     * @param int $id_category
+     */
+    public function __construct(int $id_category)
+    {
+        $this->id_category = $id_category;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIdCategory(): int
+    {
+        return $this->id_category;
+    }
 }

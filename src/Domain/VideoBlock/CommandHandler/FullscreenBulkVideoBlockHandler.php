@@ -22,36 +22,33 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\CommandHandler;
 
-use AdVideoBlock\Domain\VideoBlock\Command\ToggleStatusVideoBlockCommand;
-use AdVideoBlock\Domain\VideoBlock\Exception\CannotToggleStatusVideoBlockException;
+use AdVideoBlock\Domain\VideoBlock\Command\FullscreenBulkVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Exception\CannotFullscreenBulkVideoBlockException;
 use AdVideoBlock\Model\VideoBlock;
-use PrestaShopDatabaseException;
 use PrestaShopException;
 
-class ToggleStatusVideoBlockHandler
+final class FullscreenBulkVideoBlockHandler
 {
     /**
-     * @param ToggleStatusVideoBlockCommand $command
+     * @param FullscreenBulkVideoBlockCommand $command
      * @return void
-     * @throws CannotToggleStatusVideoBlockException
-     * @throws PrestaShopException
-     * @throws PrestaShopDatabaseException
      */
-    public function handle(ToggleStatusVideoBlockCommand $command): void
+    public function handle(FullscreenBulkVideoBlockCommand $command): void
     {
-        $id = $command->getId()->getValue();
-        $videoblock = new VideoBlock($id);
+        $ids = $command->getId()->getValue();
+        $status = $command->getStatus();
 
         try {
-            if (false === $videoblock->toggleStatus()) {
-                throw new CannotToggleStatusVideoBlockException(
-                    sprintf('Failed to toggle status for videoblock with id "%s"', $videoblock->id)
+            if (false === (new VideoBlock())->fullscreenSelection($ids, $status)) {
+                throw new CannotFullscreenBulkVideoBlockException(
+                    sprintf('Failed to fullscreen video blocks with ids "%s"', implode(', ', $ids))
                 );
             }
         } catch (PrestaShopException $exception) {
-            throw new CannotToggleStatusVideoBlockException(
-                'An unexpected error occurred when toggle status of videoblock'
+            throw new CannotFullscreenBulkVideoBlockException(
+                'An unexpected error occurred when fullscreen video blocks'
             );
         }
     }
+
 }

@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\QueryHandler;
 
-use AdVideoBlock\Domain\VideoBlock\Query\GetVideoBlockForForm;
-use AdVideoBlock\Domain\VideoBlock\QueryResult\VideoBlockForForm;
+use AdVideoBlock\Domain\VideoBlock\Query\GetVideoBlockForHook;
+use AdVideoBlock\Domain\VideoBlock\QueryResult\VideoBlockForHook;
 use AdVideoBlock\Repository\VideoBlockRepository;
 
-final class GetVideoBlockForFormHandler
+final class GetVideoBlockForHookHandler
 {
     /**
      * @var VideoBlockRepository
@@ -42,17 +42,21 @@ final class GetVideoBlockForFormHandler
     }
 
     /**
-     * @param GetVideoBlockForForm $query
-     * @return VideoBlockForForm
+     * @param GetVideoBlockForHook $query
+     * @return VideoBlockForHook
      */
-    public function handle(GetVideoBlockForForm $query): VideoBlockForForm
+    public function handle(GetVideoBlockForHook $query): VideoBlockForHook
     {
-        if (null === $query->getId()) {
-            return new VideoBlockForForm(false);
+        if (null === $query->getIdCategory()) {
+            return new VideoBlockForHook(false);
         }
 
-        return new VideoBlockForForm(
-            $this->repository->findBy(['id_ad_videoblock' => $query->getId()->getValue()])
+        return new VideoBlockForHook(
+            $this->repository->findAllBy([
+                'id_category' => $query->getIdCategory(),
+                'active' => 1
+            ])
         );
     }
+
 }

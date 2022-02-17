@@ -28,7 +28,7 @@ use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
 use AdVideoBlock\Model\VideoBlock;
 use PrestaShopException;
 
-class CreateVideoBlockHandler
+final class CreateVideoBlockHandler
 {
     /**
      * @param CreateVideoBlockCommand $command
@@ -44,12 +44,12 @@ class CreateVideoBlockHandler
         try {
             if (false === $videoblock->add()) {
                 throw new CannotCreateVideoBlockException(
-                    sprintf('Failed to create videoblock with id "%s"', $videoblock->id)
+                    sprintf('Failed to create video block with id "%s"', $videoblock->id)
                 );
             }
         } catch (PrestaShopException $exception) {
             throw new CannotCreateVideoBlockException(
-                'An unexpected error occurred when create videoblock'
+                'An unexpected error occurred when create video block'
             );
         }
 

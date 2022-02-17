@@ -25,15 +25,16 @@ namespace AdVideoBlock\Domain\VideoBlock\CommandHandler;
 use AdVideoBlock\Domain\VideoBlock\Command\EditVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Exception\CannotEditVideoBlockException;
 use AdVideoBlock\Model\VideoBlock;
+use PrestaShopDatabaseException;
 use PrestaShopException;
 
-class EditVideoBlockHandler
+final class EditVideoBlockHandler
 {
     /**
      * @param EditVideoBlockCommand $command
      * @return void
-     * @throws CannotEditVideoBlockException
      * @throws PrestaShopException
+     * @throws PrestaShopDatabaseException
      */
     public function handle(EditVideoBlockCommand $command): void
     {
@@ -45,12 +46,12 @@ class EditVideoBlockHandler
         try {
             if (false === $videoblock->update()) {
                 throw new CannotEditVideoBlockException(
-                    sprintf('Failed to update videoblock with id "%s"', $videoblock->id)
+                    sprintf('Failed to update video block with id "%s"', $id)
                 );
             }
         } catch (PrestaShopException $exception) {
             throw new CannotEditVideoBlockException(
-                'An unexpected error occurred when updating videoblock'
+                'An unexpected error occurred when updating video block'
             );
         }
     }

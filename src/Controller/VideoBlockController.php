@@ -26,8 +26,9 @@ use AdVideoBlock\Domain\VideoBlock\Command\DeleteBulkVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\DuplicateBulkVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\ActiveBulkVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Command\FullscreenBulkVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Command\ToggleFullscreenVideoBlockCommand;
-use AdVideoBlock\Domain\VideoBlock\Command\ToggleStatusVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Command\ToggleActiveVideoBlockCommand;
 use AdVideoBlock\Domain\VideoBlock\Exception\VideoBlockException;
 use AdVideoBlock\Grid\Filters\VideoBlockFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -37,7 +38,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class Ad_VideoBlockController extends FrameworkBundleAdminController
+final class VideoBlockController extends FrameworkBundleAdminController
 {
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
@@ -46,12 +47,12 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
      */
     public function indexAction(VideoBlockFilters $filters): Response
     {
-        $gridFactory = $this->get('advideoblock.grid.factory.videoblock_grid_factory');
+        $gridFactory = $this->get('advideoblock.grid.factory.videoblock');
         $grid = $gridFactory->getGrid($filters);
 
         return $this->render('@Modules/ad_videoblock/views/templates/admin/index.html.twig', [
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'grid' => $this->presentGrid($grid),
+                'grid' => $this->presentGrid($grid)
             ]
         );
     }
@@ -63,8 +64,8 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        $form = $this->get('advideoblock.form.videoblock_form_builder')->getForm();
-        $formHandler = $this->get('advideoblock.form.videoblock_form_handler');
+        $form = $this->get('advideoblock.form.form_builder.videoblock')->getForm();
+        $formHandler = $this->get('advideoblock.form.form_handler.videoblock');
 
         $form->handleRequest($request);
 
@@ -72,7 +73,7 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
             $result = $formHandler->handle($form);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('The videoblock has been successfully created.', 'Modules.Advideoblock.Admin'));
+                $this->addFlash('success', $this->trans('The video block has been successfully created.', 'Modules.Advideoblock.Admin'));
 
                 return $this->redirectToRoute('admin_ad_videoblock_index');
             }
@@ -94,8 +95,8 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
      */
     public function editAction(int $id, Request $request): Response
     {
-        $form = $this->get('advideoblock.form.videoblock_form_builder')->getFormFor($id);
-        $formHandler = $this->get('advideoblock.form.videoblock_form_handler');
+        $form = $this->get('advideoblock.form.form_builder.videoblock')->getFormFor($id);
+        $formHandler = $this->get('advideoblock.form.form_handler.videoblock');
 
         $form->handleRequest($request);
 
@@ -103,7 +104,7 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor($id, $form);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('The videoblock has been successfully updated.', 'Modules.Advideoblock.Admin'));
+                $this->addFlash('success', $this->trans('The video block has been successfully updated.', 'Modules.Advideoblock.Admin'));
 
                 return $this->redirectToRoute('admin_ad_videoblock_index');
             }
@@ -113,7 +114,7 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
 
         return $this->render('@Modules/ad_videoblock/views/templates/admin/edit.html.twig', [
             'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
 
@@ -125,11 +126,11 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
     public function deleteAction(Request $request): RedirectResponse
     {
         $id = (int)$request->get('id');
-        $handler = $this->get('advideoblock.domain.videoblock.command_handler.delete_videoblock_handler');
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.delete');
 
         try {
             $handler->handle(new DeleteVideoBlockCommand($id));
-            $this->addFlash('success', $this->trans('Video Block has been successfully deleted.', 'Modules.Advideoblock.Admin'));
+            $this->addFlash('success', $this->trans('Video block has been successfully deleted.', 'Modules.Advideoblock.Admin'));
         } catch (VideoBlockException $exception) {
             $this->addFlash('error', $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'));
         }
@@ -138,18 +139,71 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function toggleFullscreenAction(int $id): JsonResponse
+    {
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.toggle_fullscreen');
+
+        try {
+            $handler->handle(new ToggleFullscreenVideoBlockCommand($id));
+
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The video block status has been successfully updated.', 'Modules.Advideoblock.Admin'),
+            ];
+        } catch (VideoBlockException $exception) {
+            $response = [
+                'status' => false,
+                'message' => $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'),
+            ];
+        }
+
+        return $this->json($response);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function toggleActiveAction(int $id): JsonResponse
+    {
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.toggle_active');
+
+        try {
+            $handler->handle(new ToggleActiveVideoBlockCommand($id));
+
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The video block status has been successfully updated.', 'Modules.Advideoblock.Admin'),
+            ];
+        } catch (VideoBlockException $exception) {
+            $response = [
+                'status' => false,
+                'message' => $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'),
+            ];
+        }
+
+        return $this->json($response);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
      * @param Request $request
      * @return RedirectResponse
      */
-    public function deleteBulkAction(Request $request): RedirectResponse
+    public function activeBulkAction(Request $request): RedirectResponse
     {
         $ids = $request->request->get('videoblock_bulk_action');
-        $handler = $this->get('advideoblock.domain.videoblock.command_handler.delete_bulk_videoblock_handler');
+        $status = (bool)$request->get('status');
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.active_bulk');
 
         try {
-            $handler->handle(new DeleteBulkVideoBlockCommand($ids));
-            $this->addFlash('success', $this->trans('The selection has been successfully deleted.', 'Modules.Advideoblock.Admin'));
+            $handler->handle(new ActiveBulkVideoBlockCommand($ids, $status));
+            $this->addFlash('success', $this->trans('The selection has been successfully ' . ($status ? 'enabled.' : 'disabled'), 'Modules.Advideoblock.Admin'));
         } catch (VideoBlockException $exception) {
             $this->addFlash('error', $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'));
         }
@@ -162,14 +216,14 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
      * @param Request $request
      * @return RedirectResponse
      */
-    public function activeBulkAction(Request $request): RedirectResponse
+    public function fullscreenBulkAction(Request $request): RedirectResponse
     {
         $ids = $request->request->get('videoblock_bulk_action');
         $status = (bool)$request->get('status');
-        $handler = $this->get('advideoblock.domain.videoblock.command_handler.active_bulk_videoblock_handler');
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.fullscreen_bulk');
 
         try {
-            $handler->handle(new ActiveBulkVideoBlockCommand($ids, $status));
+            $handler->handle(new FullscreenBulkVideoBlockCommand($ids, $status));
             $this->addFlash('success', $this->trans('The selection has been successfully ' . ($status ? 'enabled.' : 'disabled'), 'Modules.Advideoblock.Admin'));
         } catch (VideoBlockException $exception) {
             $this->addFlash('error', $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'));
@@ -186,7 +240,7 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
     public function duplicateBulkAction(Request $request): RedirectResponse
     {
         $ids = $request->request->get('videoblock_bulk_action');
-        $handler = $this->get('advideoblock.domain.videoblock.command_handler.duplicate_bulk_videoblock_handler');
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.duplicate_bulk');
 
         try {
             $handler->handle(new DuplicateBulkVideoBlockCommand($ids));
@@ -199,55 +253,23 @@ class Ad_VideoBlockController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
-     * @param int $id
-     * @return JsonResponse
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function toggleFullscreenAction(int $id): JsonResponse
+    public function deleteBulkAction(Request $request): RedirectResponse
     {
-        $handler = $this->get('advideoblock.domain.videoblock.command_handler.toggle_fullscreen_videoblock_handler');
+        $ids = $request->request->get('videoblock_bulk_action');
+        $handler = $this->get('advideoblock.domain.videoblock.command_handler.delete_bulk');
 
         try {
-            $handler->handle(new ToggleFullscreenVideoBlockCommand($id));
-
-            $response = [
-                'status' => true,
-                'message' => $this->trans('The videoblock status has been successfully updated.', 'Modules.Advideoblock.Admin'),
-            ];
+            $handler->handle(new DeleteBulkVideoBlockCommand($ids));
+            $this->addFlash('success', $this->trans('The selection has been successfully deleted.', 'Modules.Advideoblock.Admin'));
         } catch (VideoBlockException $exception) {
-            $response = [
-                'status' => false,
-                'message' => $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'),
-            ];
+            $this->addFlash('error', $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'));
         }
 
-        return $this->json($response);
-    }
-
-    /**
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function toggleStatusAction(int $id): JsonResponse
-    {
-        $handler = $this->get('advideoblock.domain.videoblock.command_handler.toggle_status_videoblock_handler');
-
-        try {
-            $handler->handle(new ToggleStatusVideoBlockCommand($id));
-
-            $response = [
-                'status' => true,
-                'message' => $this->trans('The videoblock status has been successfully updated.', 'Modules.Advideoblock.Admin'),
-            ];
-        } catch (VideoBlockException $exception) {
-             $response = [
-                'status' => false,
-                'message' => $this->trans($exception->getMessage(), 'Modules.Advideoblock.Admin'),
-            ];
-        }
-
-        return $this->json($response);
+        return $this->redirectToRoute('admin_ad_videoblock_index');
     }
 
     /**

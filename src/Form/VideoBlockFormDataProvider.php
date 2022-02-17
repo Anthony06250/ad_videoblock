@@ -49,6 +49,7 @@ final class VideoBlockFormDataProvider implements FormDataProviderInterface
     {
         $response = $this->commandBus->handle(new GetVideoBlockForForm($id));
         $data = $response->getData();
+
         if ($id) {
             $data['url'] = 'https://youtube.com/watch?v=' . $data['url'];
         }

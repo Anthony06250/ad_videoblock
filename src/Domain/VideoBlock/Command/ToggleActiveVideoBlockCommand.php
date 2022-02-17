@@ -22,6 +22,6 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\Command;
 
-class ToggleStatusVideoBlockCommand extends AbstractVideoBlockCommand
+final class ToggleActiveVideoBlockCommand extends AbstractVideoBlockCommand
 {
 }

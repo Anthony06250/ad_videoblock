@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\ValueObject;
 
-class VideoBlockId
+final class VideoBlockId
 {
     /**
      * @var mixed

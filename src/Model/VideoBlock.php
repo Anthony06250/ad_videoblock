@@ -26,7 +26,7 @@ use ObjectModel;
 use PrestaShopDatabaseException;
 use PrestaShopException;
 
-class VideoBlock extends ObjectModel
+final class VideoBlock extends ObjectModel
 {
     /**
      * @var int
@@ -75,7 +75,7 @@ class VideoBlock extends ObjectModel
         'table' => 'ad_videoblock',
         'primary' => 'id_ad_videoblock',
         'fields' => [
-            'id_category' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'id_category' => ['type' => self::TYPE_INT, 'required' => true],
             'title' => ['type' => self::TYPE_STRING, 'size' => 255],
             'subtitle' => ['type' => self::TYPE_STRING, 'size' => 255],
             'url' => ['type' => self::TYPE_STRING, 'size' => 255],
@@ -91,16 +91,28 @@ class VideoBlock extends ObjectModel
      */
     public function toArray(): array
     {
-        return [
-            'id_category' => $this->id_category,
-            'title' => $this->title,
-            'subtitle' => $this->subtitle,
-            'url' => $this->url,
-            'description' => $this->description,
-            'options' => $this->options,
-            'fullscreen' => $this->fullscreen,
-            'active' => $this->active
-        ];
+        $result = [];
+
+        foreach (VideoBlock::$definition['fields'] as $key => $value) {
+            $result[$key] = $this->{$key};
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $data
+     * @return VideoBlock
+     */
+    public function fromArray(array $data): VideoBlock
+    {
+        foreach ($data as $key => $value) {
+            if (empty($this->{$key})) {
+                $this->{$key} = $value;
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -112,8 +124,10 @@ class VideoBlock extends ObjectModel
     public function duplicateSelection(array $ids): bool
     {
         $result = true;
+
         foreach ($ids as $id) {
             $this->id = (int)$id;
+
             $result = $result && $this->duplicateObject()->save();
         }
 
@@ -130,10 +144,36 @@ class VideoBlock extends ObjectModel
     public function activeSelection(array $ids, bool $status): bool
     {
         $result = true;
+
         foreach ($ids as $id) {
             $videoblock = new VideoBlock($id);
+
             $videoblock->setFieldsToUpdate(['active' => true]);
             $videoblock->active = $status;
+
+            $result = $result && $videoblock->update(false);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $ids
+     * @param bool $status
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
+    public function fullscreenSelection(array $ids, bool $status): bool
+    {
+        $result = true;
+
+        foreach ($ids as $id) {
+            $videoblock = new VideoBlock($id);
+
+            $videoblock->setFieldsToUpdate(['fullscreen' => true]);
+            $videoblock->fullscreen = $status;
+
             $result = $result && $videoblock->update(false);
         }
 

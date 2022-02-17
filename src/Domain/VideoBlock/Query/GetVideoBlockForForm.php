@@ -24,7 +24,7 @@ namespace AdVideoBlock\Domain\VideoBlock\Query;
 
 use AdVideoBlock\Domain\VideoBlock\ValueObject\VideoBlockId;
 
-class GetVideoBlockForForm
+final class GetVideoBlockForForm
 {
     /**
      * @var VideoBlockId|null

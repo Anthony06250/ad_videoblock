@@ -22,30 +22,30 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\CommandHandler;
 
-use AdVideoBlock\Domain\VideoBlock\Command\DeleteVideoBlockCommand;
-use AdVideoBlock\Domain\VideoBlock\Exception\CannotDeleteVideoBlockException;
+use AdVideoBlock\Domain\VideoBlock\Command\ToggleActiveVideoBlockCommand;
+use AdVideoBlock\Domain\VideoBlock\Exception\CannotToggleStatusVideoBlockException;
 use AdVideoBlock\Model\VideoBlock;
 use PrestaShopException;
 
-final class DeleteVideoBlockHandler
+final class ToggleActiveVideoBlockHandler
 {
     /**
-     * @param DeleteVideoBlockCommand $command
+     * @param ToggleActiveVideoBlockCommand $command
      * @return void
      */
-    public function handle(DeleteVideoBlockCommand $command): void
+    public function handle(ToggleActiveVideoBlockCommand $command): void
     {
         $id = $command->getId()->getValue();
 
         try {
-            if (false === (new VideoBlock($id))->delete()) {
-                throw new CannotDeleteVideoBlockException(
-                    sprintf('Failed to delete video block with id "%s"', $id)
+            if (false === (new VideoBlock($id))->toggleStatus()) {
+                throw new CannotToggleStatusVideoBlockException(
+                    sprintf('Failed to toggle status for video block with id "%s"', $id)
                 );
             }
         } catch (PrestaShopException $exception) {
-            throw new CannotDeleteVideoBlockException(
-                'An unexpected error occurred when delete video block'
+            throw new CannotToggleStatusVideoBlockException(
+                'An unexpected error occurred when toggle status of video block'
             );
         }
     }

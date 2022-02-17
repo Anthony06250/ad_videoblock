@@ -48,7 +48,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class VideoBlockGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
+final class VideoBlockGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
     const GRID_ID = 'videoblock';
 
@@ -115,12 +115,12 @@ class VideoBlockGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id',
-                        'route' => 'admin_ad_videoblock_toggle_status',
+                        'route' => 'admin_ad_videoblock_toggle_active',
                         'route_param_name' => 'id'
                     ])
             )
             ->add((new ActionColumn('actions'))
-                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setName($this->trans('Actions', [], 'Modules.Advideoblock.Admin'))
                     ->setOptions([
                         'actions' => (new RowActionCollection())
                             ->add((new LinkRowAction('edit'))
@@ -141,12 +141,12 @@ class VideoBlockGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
                                         'route' => 'admin_ad_videoblock_delete',
                                         'route_param_name' => 'id',
                                         'route_param_field' => 'id',
-                                        'confirm_message' => $this->trans('Are you sure you want to delete the videoblock ?', [], 'Modules.Advideoblock.Admin'),
+                                        'confirm_message' => $this->trans('Are you sure you want to delete the video block ?', [], 'Modules.Advideoblock.Admin'),
                                         'modal_options' => new ModalOptions([
-                                            'title' => $this->trans('Delete videoblock', [], 'Modules.Videoblock.Admin'),
-                                            'confirm_button_label' => $this->trans('Delete', [], 'Modules.Videoblock.Admin'),
+                                            'title' => $this->trans('Delete videoblock', [], 'Modules.Advideoblock.Admin'),
+                                            'confirm_button_label' => $this->trans('Delete', [], 'Modules.Advideoblock.Admin'),
                                             'confirm_button_class' => 'btn-danger',
-                                            'close_button_label' => $this->trans('Close', [], 'Modules.Videoblock.Admin')
+                                            'close_button_label' => $this->trans('Close', [], 'Modules.Advideoblock.Admin')
                                         ])
                                     ])
                             )
@@ -161,32 +161,32 @@ class VideoBlockGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
     {
         return (new FilterCollection())
             ->add((new Filter('title', TextType::class))
+                ->setAssociatedColumn('title')
                 ->setTypeOptions([
                         'required' => false,
                         'attr' => ['placeholder' => $this->trans('Search title', [], 'Modules.Advideoblock.Admin')]
                     ])
-                ->setAssociatedColumn('title')
             )
             ->add((new Filter('subtitle', TextType::class))
+                ->setAssociatedColumn('subtitle')
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => ['placeholder' => $this->trans('Search subtitle', [], 'Modules.Advideoblock.Admin')]
                 ])
-                ->setAssociatedColumn('subtitle')
             )
             ->add((new Filter('description', TextType::class))
+                ->setAssociatedColumn('description')
                 ->setTypeOptions([
                         'required' => false,
                         'attr' => ['placeholder' => $this->trans('Search description', [], 'Modules.Advideoblock.Admin')]
                     ])
-                ->setAssociatedColumn('description')
             )
             ->add((new Filter('category', TextType::class))
+                ->setAssociatedColumn('category')
                 ->setTypeOptions([
                     'required' => false,
                     'attr' => ['placeholder' => $this->trans('Search category', [], 'Modules.Advideoblock.Admin')]
                 ])
-                ->setAssociatedColumn('category')
             )
             ->add((new Filter('fullscreen', YesAndNoChoiceType::class))
                     ->setAssociatedColumn('fullscreen')
@@ -195,12 +195,12 @@ class VideoBlockGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
                     ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
-                    ->setTypeOptions([
+                ->setAssociatedColumn('actions')
+                ->setTypeOptions([
                         'reset_route' => 'admin_common_reset_search_by_filter_id',
                         'reset_route_params' => ['filterId' => self::GRID_ID],
                         'redirect_route' => 'admin_ad_videoblock_index'
                     ])
-                    ->setAssociatedColumn('actions')
             );
     }
 
@@ -211,53 +211,80 @@ class VideoBlockGridDefinitionFactory extends AbstractFilterableGridDefinitionFa
     {
         return (new BulkActionCollection())
             ->add((new EnableBulkAction('enable_selection'))
-                ->setName($this->trans('Enable selection', [], 'Modules.Videoblock.Admin'))
+                ->setName($this->trans('Enable selection', [], 'Modules.Advideoblock.Admin'))
                 ->setOptions([
                     'submit_route' => 'admin_ad_videoblock_active_bulk',
                     'route_params' => ['status' => true],
-                    'confirm_message' => $this->trans('Are you sure you want to enable the selected videoblock(s) ?', [], 'Modules.Videoblock.Admin'),
+                    'confirm_message' => $this->trans('Are you sure you want to enable the selected video block(s) ?', [], 'Modules.Advideoblock.Admin'),
                     'modal_options' => new ModalOptions([
-                        'title' => $this->trans('Enable videoblock(s) selection', [], 'Modules.Videoblock.Admin'),
-                        'confirm_button_label' => $this->trans('Enable selection', [], 'Modules.Videoblock.Admin'),
+                        'title' => $this->trans('Enable video block(s) selection', [], 'Modules.Advideoblock.Admin'),
+                        'confirm_button_label' => $this->trans('Enable selection', [], 'Modules.Advideoblock.Admin'),
                         'confirm_button_class' => 'btn-success'
                     ])
                 ])
             )
             ->add((new DisableBulkAction('disable_selection'))
-                ->setName($this->trans('Disable selection', [], 'Modules.Videoblock.Admin'))
+                ->setName($this->trans('Disable selection', [], 'Modules.Advideoblock.Admin'))
                 ->setOptions([
                     'submit_route' => 'admin_ad_videoblock_active_bulk',
                     'route_params' => ['status' => false],
-                    'confirm_message' => $this->trans('Are you sure you want to disable the selected videoblock(s) ?', [], 'Modules.Videoblock.Admin'),
+                    'confirm_message' => $this->trans('Are you sure you want to disable the selected video block(s) ?', [], 'Modules.Advideoblock.Admin'),
                     'modal_options' => new ModalOptions([
-                        'title' => $this->trans('Disable videoblock(s) selection', [], 'Modules.Videoblock.Admin'),
-                        'confirm_button_label' => $this->trans('Disable selection', [], 'Modules.Videoblock.Admin'),
+                        'title' => $this->trans('Disable video block(s) selection', [], 'Modules.Advideoblock.Admin'),
+                        'confirm_button_label' => $this->trans('Disable selection', [], 'Modules.Advideoblock.Admin'),
                         'confirm_button_class' => 'btn-warning'
                     ])
                 ])
             )
             ->add(new DividerBulkAction('divider1'))
-            ->add((new DuplicateBulkAction('duplicate_selection'))
-                ->setName($this->trans('Duplicate selection', [], 'Modules.Videoblock.Admin'))
+            ->add((new EnableBulkAction('allow_fullscreen_selection'))
+                ->setName($this->trans('Allow fullscreen selection', [], 'Modules.Advideoblock.Admin'))
                 ->setOptions([
-                    'submit_route' => 'admin_ad_videoblock_duplicate_bulk',
-                    'confirm_message' => $this->trans('Are you sure you want to duplicate the selected videoblock(s) ?', [], 'Modules.Videoblock.Admin'),
+                    'submit_route' => 'admin_ad_videoblock_fullscreen_bulk',
+                    'route_params' => ['status' => true],
+                    'confirm_message' => $this->trans('Are you sure you want to allow fullscreen on the selected video block(s) ?', [], 'Modules.Advideoblock.Admin'),
                     'modal_options' => new ModalOptions([
-                        'title' => $this->trans('Duplicate videoblock(s) selection', [], 'Modules.Videoblock.Admin'),
-                        'confirm_button_label' => $this->trans('Duplicate selection', [], 'Modules.Videoblock.Admin'),
+                        'title' => $this->trans('Allow fullscreen on video block(s) selection', [], 'Modules.Advideoblock.Admin'),
+                        'confirm_button_label' => $this->trans('Allow fullscreen on selection', [], 'Modules.Advideoblock.Admin'),
                         'confirm_button_class' => 'btn-success'
                     ])
                 ])
             )
+            ->add((new DisableBulkAction('forbid_fullscreen_selection'))
+                ->setName($this->trans('Forbid fullscreen selection', [], 'Modules.Advideoblock.Admin'))
+                ->setOptions([
+                    'submit_route' => 'admin_ad_videoblock_fullscreen_bulk',
+                    'route_params' => ['status' => false],
+                    'confirm_message' => $this->trans('Are you sure you want to forbid fullscreen on the selected video block(s) ?', [], 'Modules.Advideoblock.Admin'),
+                    'modal_options' => new ModalOptions([
+                        'title' => $this->trans('Forbid fullscreen on video block(s) selection', [], 'Modules.Advideoblock.Admin'),
+                        'confirm_button_label' => $this->trans('Forbid fullscreen on selection', [], 'Modules.Advideoblock.Admin'),
+                        'confirm_button_class' => 'btn-warning'
+                    ])
+                ])
+            )
             ->add(new DividerBulkAction('divider2'))
+            ->add((new DuplicateBulkAction('duplicate_selection'))
+                ->setName($this->trans('Duplicate selection', [], 'Modules.Advideoblock.Admin'))
+                ->setOptions([
+                    'submit_route' => 'admin_ad_videoblock_duplicate_bulk',
+                    'confirm_message' => $this->trans('Are you sure you want to duplicate the selected video block(s) ?', [], 'Modules.Advideoblock.Admin'),
+                    'modal_options' => new ModalOptions([
+                        'title' => $this->trans('Duplicate video block(s) selection', [], 'Modules.Advideoblock.Admin'),
+                        'confirm_button_label' => $this->trans('Duplicate selection', [], 'Modules.Advideoblock.Admin'),
+                        'confirm_button_class' => 'btn-success'
+                    ])
+                ])
+            )
+            ->add(new DividerBulkAction('divider3'))
             ->add((new DeleteBulkAction('delete_selection'))
-                ->setName($this->trans('Delete selected', [], 'Modules.Videoblock.Admin'))
+                ->setName($this->trans('Delete selection', [], 'Modules.Advideoblock.Admin'))
                 ->setOptions([
                     'submit_route' => 'admin_ad_videoblock_delete_bulk',
-                    'confirm_message' => $this->trans('Are you sure you want to delete the selected videoblock(s) ?', [], 'Modules.Videoblock.Admin'),
+                    'confirm_message' => $this->trans('Are you sure you want to delete the selected video block(s) ?', [], 'Modules.Advideoblock.Admin'),
                     'modal_options' => new ModalOptions([
-                        'title' => $this->trans('Delete videoblock(s) selection', [], 'Modules.Videoblock.Admin'),
-                        'confirm_button_label' => $this->trans('Delete selection', [], 'Modules.Videoblock.Admin'),
+                        'title' => $this->trans('Delete video block(s) selection', [], 'Modules.Advideoblock.Admin'),
+                        'confirm_button_label' => $this->trans('Delete selection', [], 'Modules.Advideoblock.Admin'),
                         'confirm_button_class' => 'btn-danger'
                     ])
                 ])

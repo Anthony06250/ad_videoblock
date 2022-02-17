@@ -22,6 +22,6 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\Command;
 
-class DeleteVideoBlockCommand extends AbstractVideoBlockCommand
+final class DeleteVideoBlockCommand extends AbstractVideoBlockCommand
 {
 }

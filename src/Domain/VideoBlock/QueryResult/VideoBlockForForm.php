@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Domain\VideoBlock\QueryResult;
 
-class VideoBlockForForm
+final class VideoBlockForForm
 {
     /**
      * @var mixed

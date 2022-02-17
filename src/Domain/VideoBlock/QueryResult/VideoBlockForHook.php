@@ -20,8 +20,32 @@
 
 declare(strict_types=1);
 
-namespace AdVideoBlock\Domain\VideoBlock\Exception;
+namespace AdVideoBlock\Domain\VideoBlock\QueryResult;
 
-final class CannotCreateVideoBlockException extends VideoBlockException
+final class VideoBlockForHook
 {
+    /**
+     * @var mixed
+     */
+    private $data;
+
+    /**
+     * @param mixed $data
+     */
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        foreach ($this->data as $key => $value) {
+            $this->data[$key]['url'] = 'https://www.youtube-nocookie.com/embed/' . $value['url'];
+        }
+
+        return $this->data;
+    }
 }

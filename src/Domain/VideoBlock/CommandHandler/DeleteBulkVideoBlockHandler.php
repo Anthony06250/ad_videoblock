@@ -27,27 +27,25 @@ use AdVideoBlock\Domain\VideoBlock\Exception\CannotDeleteBulkVideoBlockException
 use AdVideoBlock\Model\VideoBlock;
 use PrestaShopException;
 
-class DeleteBulkVideoBlockHandler
+final class DeleteBulkVideoBlockHandler
 {
     /**
      * @param DeleteBulkVideoBlockCommand $command
      * @return void
-     * @throws CannotDeleteBulkVideoBlockException
      */
     public function handle(DeleteBulkVideoBlockCommand $command): void
     {
         $ids = $command->getId()->getValue();
-        $videoblock = new VideoBlock();
 
         try {
-            if (false === $videoblock->deleteSelection($ids)) {
+            if (false === (new VideoBlock())->deleteSelection($ids)) {
                 throw new CannotDeleteBulkVideoBlockException(
-                    sprintf('Failed to delete videoblocks with ids "%s"', implode(', ', $ids))
+                    sprintf('Failed to delete video blocks with ids "%s"', implode(', ', $ids))
                 );
             }
         } catch (PrestaShopException $exception) {
             throw new CannotDeleteBulkVideoBlockException(
-                'An unexpected error occurred when delete videoblocks'
+                'An unexpected error occurred when delete video blocks'
             );
         }
     }

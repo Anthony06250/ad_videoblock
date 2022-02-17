@@ -22,17 +22,16 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Install;
 
-use Db;
+use Module;
 
-class InstallerFactory
+final class InstallerFactory
 {
     /**
+     * @param Module $module
      * @return Installer
      */
-    public static function create(): Installer
+    public static function create(Module $module): Installer
     {
-        return new Installer(
-            new FixturesInstaller(Db::getInstance())
-        );
+        return new Installer($module, new FixturesInstaller());
     }
 }

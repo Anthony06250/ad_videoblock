@@ -1,79 +1,86 @@
 admin_ad_videoblock_index:
-  path: /
+  path: /videoblock/
   methods: [GET]
   defaults:
-    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::indexAction'
+    _controller: 'AdVideoBlock\Controller\VideoBlockController::indexAction'
     _legacy_controller: 'AdminVideoBlock'
-    _legacy_link: 'AdminVideoBlock'
 
 admin_ad_videoblock_search:
-    path: /
+    path: /videoblock/
     methods: [POST]
     defaults:
         _controller: PrestaShopBundle:Admin\Common:searchGrid
-        gridDefinitionFactoryServiceId: advideoblock.grid.factory.videoblock_grid_definition_factory
+        gridDefinitionFactoryServiceId: advideoblock.grid.factory.definition.videoblock
         redirectRoute: admin_ad_videoblock_index
         _legacy_controller: 'AdminVideoBlock'
         _legacy_link: 'AdminVideoBlock:submitFiltervideoblock'
 
 admin_ad_videoblock_create:
-  path: /new
+  path: /videoblock/new
   methods: [GET, POST]
   defaults:
-    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::createAction'
+    _controller: 'AdVideoBlock\Controller\VideoBlockController::createAction'
     _legacy_controller: 'AdminVideoBlock'
 
 admin_ad_videoblock_edit:
-  path: /{id}/edit
+  path: /videoblock/{id}/edit
   methods: [GET, POST]
   defaults:
-    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::editAction'
+    _controller: 'AdVideoBlock\Controller\VideoBlockController::editAction'
     _legacy_controller: 'AdminVideoBlock'
   requirements:
     id: \d+
 
 admin_ad_videoblock_delete:
-  path: /delete
+  path: /videoblock/delete
   methods: [DELETE]
   defaults:
-    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::deleteAction'
+    _controller: 'AdVideoBlock\Controller\VideoBlockController::deleteAction'
+    _legacy_controller: 'AdminVideoBlock'
+
+admin_ad_videoblock_toggle_fullscreen:
+    path: /videoblock/{id}/toggle-fullscreen
+    methods: [POST]
+    defaults:
+        _controller: 'AdVideoBlock\Controller\VideoBlockController::toggleFullscreenAction'
+        _legacy_controller: 'AdminVideoBlock'
+    requirements:
+        id: \d+
+
+admin_ad_videoblock_toggle_active:
+    path: /videoblock/{id}/toggle-active
+    methods: [POST]
+    defaults:
+        _controller: 'AdVideoBlock\Controller\VideoBlockController::toggleActiveAction'
+        _legacy_controller: 'AdminVideoBlock'
+    requirements:
+        id: \d+
+
+admin_ad_videoblock_duplicate_bulk:
+    path: /videoblock/duplicate-bulk
+    methods: [POST]
+    defaults:
+        _controller: 'AdVideoBlock\Controller\VideoBlockController::duplicateBulkAction'
+        _legacy_controller: 'AdminVideoBlock'
+
+admin_ad_videoblock_active_bulk:
+  path: /videoblock/active-bulk
+  methods: [POST]
+  defaults:
+    _controller: 'AdVideoBlock\Controller\VideoBlockController::activeBulkAction'
+    _legacy_controller: 'AdminVideoBlock'
+
+admin_ad_videoblock_fullscreen_bulk:
+  path: /videoblock/fullscreen-bulk
+  methods: [POST]
+  defaults:
+    _controller: 'AdVideoBlock\Controller\VideoBlockController::fullscreenBulkAction'
     _legacy_controller: 'AdminVideoBlock'
 
 admin_ad_videoblock_delete_bulk:
-  path: /delete-bulk
-  methods: [POST]
-  defaults:
-    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::deleteBulkAction'
-    _legacy_controller: 'AdminVideoBlock'
-
-admin_ad_videoblock_active_bulk:
-  path: /active-bulk
-  methods: [POST]
-  defaults:
-    _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::activeBulkAction'
-    _legacy_controller: 'AdminVideoBlock'
-
-admin_ad_videoblock_duplicate_bulk:
-    path: /duplicate-bulk
+    path: /videoblock/delete-bulk
     methods: [POST]
     defaults:
-        _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::duplicateBulkAction'
+        _controller: 'AdVideoBlock\Controller\VideoBlockController::deleteBulkAction'
         _legacy_controller: 'AdminVideoBlock'
 
-admin_ad_videoblock_toggle_fullscreen:
-    path: /{id}/toggle-fullscreen
-    methods: [POST]
-    defaults:
-        _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::toggleFullscreenAction'
-        _legacy_controller: 'AdminVideoBlock'
-    requirements:
-        id: \d+
-
-admin_ad_videoblock_toggle_status:
-    path: /{id}/toggle-status
-    methods: [POST]
-    defaults:
-        _controller: 'AdVideoBlock\Controller\Ad_VideoBlockController::toggleStatusAction'
-        _legacy_controller: 'AdminVideoBlock'
-    requirements:
-        id: \d+

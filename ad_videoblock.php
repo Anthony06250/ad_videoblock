@@ -20,8 +20,9 @@
 
 declare(strict_types=1);
 
+use AdVideoBlock\Domain\VideoBlock\Query\GetVideoBlockForHook;
+use AdVideoBlock\Install\Installer;
 use AdVideoBlock\Install\InstallerFactory;
-use AdVideoBlock\Repository\VideoBlockRepository;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 if (!defined('_PS_VERSION_')) {
@@ -35,33 +36,24 @@ class Ad_VideoBlock extends Module implements WidgetInterface
     /**
      * -> TODO: Made multiple language
      * -> TODO: Made multiple shop
-     * -> TODO: Make enable/disable fullscreen on grid bulk action
      */
+
+    /**
+     * Kernel for get services from hooks
+     * @var AppKernel
+     */
+    private $hookKernel;
 
     public function __construct()
     {
         $this->name = 'ad_videoblock';
         $this->author = 'Anthony DURET';
-        $this->version = '1.0.0';
         $this->tab = 'front_office_features';
+        $this->version = '1.0.0';
         $this->ps_versions_compliancy = ['min' => '1.7.7.0', 'max' => _PS_VERSION_];
         $this->bootstrap = true;
 
-        $tabNames = [];
-        foreach (Language::getLanguages() as $lang) {
-            $tabNames[$lang['locale']] = $this->trans('Video Block', [], 'Modules.Advideoblock.Admin', $lang['locale']);
-        }
-        $this->tabs = [
-            [
-                'route_name' => 'admin_ad_videoblock_index',
-                'class_name' => 'AdminVideoBlock',
-                'visible' => true,
-                'name' => $tabNames,
-                'parent_class_name' => 'AdminParentThemes',
-                'wording' => 'Video Block',
-                'wording_domain' => 'Modules.Advideoblock.Admin'
-            ],
-        ];
+        $this->tabs = Installer::getTabs();
 
         parent::__construct();
 
@@ -82,10 +74,10 @@ class Ad_VideoBlock extends Module implements WidgetInterface
             Shop::setContext(Shop::CONTEXT_ALL);
         }
 
-        $installer = InstallerFactory::create();
+        $installer = InstallerFactory::create($this);
 
         return parent::install()
-            && $installer->install($this);
+            && $installer->install();
     }
 
     /**
@@ -93,7 +85,7 @@ class Ad_VideoBlock extends Module implements WidgetInterface
      */
     public function uninstall(): bool
     {
-        $installer = InstallerFactory::create();
+        $installer = InstallerFactory::create($this);
 
         return parent::uninstall()
             && $installer->uninstall();
@@ -126,9 +118,9 @@ class Ad_VideoBlock extends Module implements WidgetInterface
     {
         if ($hookName == 'displayHome'
             || Tools::getValue('id_category')) {
-                $this->smarty->assign(['videoblocks' => $this->getWidgetVariables($hookName, $configuration)]);
-
-                return $this->display(__FILE__, 'views/templates/widget/videoblock.tpl');
+                return $this->render('@Modules/ad_videoblock/views/templates/widget/videoblock.html.twig', [
+                    'videoblocks' => $this->getWidgetVariables($hookName, $configuration)
+                ]);
         }
     }
 
@@ -140,21 +132,46 @@ class Ad_VideoBlock extends Module implements WidgetInterface
      */
     public function getWidgetVariables($hookName, array $configuration): ?array
     {
-        $videoblocks = null;
         $category = $hookName == 'displayHome' ? 2 : (int)Tools::getValue('id_category');
+        $response = $this->handle(new GetVideoBlockForHook($category));
 
-        if ($connection = $this->get('doctrine.dbal.default_connection')) {
-            $videoblocks = (new VideoBlockRepository($connection))->findAllBy([
-                'id_category' => $category,
-                'active' => true
-            ]);
+        return $response->getData();
+    }
 
-            foreach ($videoblocks as &$videoblock) {
-                $videoblock['url'] = 'https://www.youtube-nocookie.com/embed/' . $videoblock['url'];
-            }
+    /**
+     * @param string $template
+     * @param array $params
+     * @return mixed
+     */
+    private function render(string $template, array $params)
+    {
+        $this->loadHookKernel();
+
+        return $this->hookKernel->getContainer()->get('twig')->render($template, $params);
+    }
+
+    /**
+     * @param mixed $query
+     * @return mixed
+     */
+    private function handle($query)
+    {
+        $this->loadHookKernel();
+
+        return $this->hookKernel->getContainer()->get('prestashop.core.query_bus')->handle($query);
+    }
+
+    /**
+     * @return void
+     */
+    private function loadHookKernel(): void
+    {
+        // Load kernel for get services from hooks
+        if (!$this->hookKernel) {
+            $this->hookKernel = new AppKernel(_PS_MODE_DEV_ ? 'dev' : 'prod', _PS_MODE_DEV_);
+
+            $this->hookKernel->boot();
         }
-
-        return $videoblocks;
     }
 
     /**

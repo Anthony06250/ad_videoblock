@@ -22,28 +22,16 @@ declare(strict_types=1);
 
 namespace AdVideoBlock\Install;
 
-use Db;
-use PrestaShopBundle\Install\Database;
+use AdVideoBlock\Model\VideoBlock;
 use PrestaShopDatabaseException;
+use PrestaShopException;
 
-class FixturesInstaller
+final class FixturesInstaller
 {
-    /**
-     * @var Database
-     */
-    private $database;
-
-    /**
-     * @param Db $database
-     */
-    public function __construct(Db $database)
-    {
-        $this->database = $database;
-    }
-
     /**
      * @return void
      * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function install(): void
     {
@@ -61,7 +49,7 @@ class FixturesInstaller
         ];
 
         foreach ($datas as $data) {
-            $this->database->insert('ad_videoblock', $data);
+            (new VideoBlock())->fromArray($data)->save();
         }
     }
 }
