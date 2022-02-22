@@ -157,7 +157,7 @@ final class Installer
         $tabNames = [];
 
         foreach (Language::getLanguages(true) as $lang) {
-            $tabNames[$lang['locale']] = Context::getContext()->getTranslator()->trans('Video Block', [], 'Modules.Advideoblock.Admin', $lang['locale']);
+            $tabNames[$lang['locale']] = Context::getContext()->getTranslator()->trans('Video block', [], 'Modules.Advideoblock.Admin', $lang['locale']);
         }
 
         return [
@@ -167,7 +167,7 @@ final class Installer
                 'visible' => true,
                 'name' => $tabNames,
                 'parent_class_name' => 'AdminParentThemes',
-                'wording' => 'Video Block',
+                'wording' => 'Video block',
                 'wording_domain' => 'Modules.Advideoblock.Admin'
             ],
         ];

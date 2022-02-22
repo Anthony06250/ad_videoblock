@@ -107,7 +107,7 @@ final class VideoBlock extends ObjectModel
     public function fromArray(array $data): VideoBlock
     {
         foreach ($data as $key => $value) {
-            if (empty($this->{$key})) {
+            if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
         }
@@ -136,45 +136,23 @@ final class VideoBlock extends ObjectModel
 
     /**
      * @param array $ids
+     * @param string $field
      * @param bool $status
      * @return bool
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function activeSelection(array $ids, bool $status): bool
+    public function toggleSelection(array $ids, string $field, bool $status = null): bool
     {
         $result = true;
 
         foreach ($ids as $id) {
-            $videoblock = new VideoBlock($id);
+            $object = new VideoBlock($id);
 
-            $videoblock->setFieldsToUpdate(['active' => true]);
-            $videoblock->active = $status;
+            $object->setFieldsToUpdate([$field => true]);
+            $object->{$field} = $status ?? !(int)$this->{$field};
 
-            $result = $result && $videoblock->update(false);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param array $ids
-     * @param bool $status
-     * @return bool
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
-     */
-    public function fullscreenSelection(array $ids, bool $status): bool
-    {
-        $result = true;
-
-        foreach ($ids as $id) {
-            $videoblock = new VideoBlock($id);
-
-            $videoblock->setFieldsToUpdate(['fullscreen' => true]);
-            $videoblock->fullscreen = $status;
-
-            $result = $result && $videoblock->update(false);
+            $result = $result && $object->update(false);
         }
 
         return $result;

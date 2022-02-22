@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>ad_videoblock</name>
-    <displayName><![CDATA[AD - Video Block]]></displayName>
+    <displayName><![CDATA[AD - Bloc Vid&eacute;o]]></displayName>
     <version><![CDATA[1.0.0]]></version>
-    <description><![CDATA[Display a video block on the homepage and on the categories.]]></description>
+    <description><![CDATA[Afficher un bloc vid&eacute;o sur la page d&#039;accueil et sur les cat&eacute;gories.]]></description>
     <author><![CDATA[Anthony DURET]]></author>
     <tab><![CDATA[front_office_features]]></tab>
-	<confirmUninstall><![CDATA[Are you sure you want to uninstall ?]]></confirmUninstall>
+	<confirmUninstall><![CDATA[Êtes-vous sur de vouloir désinstaller ?]]></confirmUninstall>
     <is_configurable>0</is_configurable>
     <need_instance>1</need_instance>
 	<limited_countries></limited_countries>

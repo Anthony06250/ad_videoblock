@@ -39,7 +39,7 @@ final class ActiveBulkVideoBlockHandler
         $status = $command->getStatus();
 
         try {
-            if (false === (new VideoBlock())->activeSelection($ids, $status)) {
+            if (false === (new VideoBlock())->toggleSelection($ids, 'active', $status)) {
                 throw new CannotActiveBulkVideoBlockException(
                     sprintf('Failed to enable video blocks with ids "%s"', implode(', ', $ids))
                 );

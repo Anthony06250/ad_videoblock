@@ -111,7 +111,7 @@ final class VideoBlockGridDefinitionFactory extends AbstractFilterableGridDefini
                     ])
             )
             ->add((new ToggleColumn('active'))
-                    ->setName($this->trans('Active', [], 'Modules.Advideoblock.Admin'))
+                    ->setName($this->trans('Status', [], 'Modules.Advideoblock.Admin'))
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id',

@@ -39,7 +39,7 @@ class Ad_VideoBlock extends Module implements WidgetInterface
      */
 
     /**
-     * Kernel for get services from hooks
+     * Kernel for get services on front office
      * @var AppKernel
      */
     private $hookKernel;
@@ -98,12 +98,12 @@ class Ad_VideoBlock extends Module implements WidgetInterface
     {
         $this->context->controller->registerStylesheet(
             'module-' . $this->name . '-default',
-            'modules/' . '/' . $this->name . '/views/css/default.css',
-            ['media' => 'all', 'priority' => 200]
+            'modules/' . $this->name . '/views/css/default.css',
+            ['media' => 'all', 'priority' => 150]
         );
         $this->context->controller->registerStylesheet(
             'module-' . $this->name . '-custom',
-            'modules/' . '/' . $this->name . '/views/css/custom.css',
+            'modules/' . $this->name . '/views/css/custom.css',
             ['media' => 'all', 'priority' => 200]
         );
     }
@@ -145,7 +145,7 @@ class Ad_VideoBlock extends Module implements WidgetInterface
      */
     private function render(string $template, array $params)
     {
-        $this->loadHookKernel();
+        $this->loadFrontKernel();
 
         return $this->hookKernel->getContainer()->get('twig')->render($template, $params);
     }
@@ -156,7 +156,7 @@ class Ad_VideoBlock extends Module implements WidgetInterface
      */
     private function handle($query)
     {
-        $this->loadHookKernel();
+        $this->loadFrontKernel();
 
         return $this->hookKernel->getContainer()->get('prestashop.core.query_bus')->handle($query);
     }
@@ -164,9 +164,9 @@ class Ad_VideoBlock extends Module implements WidgetInterface
     /**
      * @return void
      */
-    private function loadHookKernel(): void
+    private function loadFrontKernel(): void
     {
-        // Load kernel for get services from hooks
+        // Load kernel for get services on front office
         if (!$this->hookKernel) {
             $this->hookKernel = new AppKernel(_PS_MODE_DEV_ ? 'dev' : 'prod', _PS_MODE_DEV_);
 

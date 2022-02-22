@@ -39,7 +39,7 @@ final class FullscreenBulkVideoBlockHandler
         $status = $command->getStatus();
 
         try {
-            if (false === (new VideoBlock())->fullscreenSelection($ids, $status)) {
+            if (false === (new VideoBlock())->toggleSelection($ids, 'fullscreen', $status)) {
                 throw new CannotFullscreenBulkVideoBlockException(
                     sprintf('Failed to fullscreen video blocks with ids "%s"', implode(', ', $ids))
                 );

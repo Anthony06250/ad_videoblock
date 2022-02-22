@@ -17,7 +17,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-$(document).ready(function () {
+$(function () {
     const grid = new window.prestashop.component.Grid('videoblock');
 
     grid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());

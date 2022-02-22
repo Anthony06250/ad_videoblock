@@ -17,6 +17,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-$(document).ready(function () {
+$(function () {
     new window.prestashop.component.ChoiceTree('#video_block_id_category');
 });

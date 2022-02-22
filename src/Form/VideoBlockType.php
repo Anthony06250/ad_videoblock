@@ -104,7 +104,7 @@ final class VideoBlockType extends TranslatorAwareType
                 ],
             ])
             ->add('active', SwitchType::class, [
-                'label' => $this->trans('Video active', 'Modules.Advideoblock.Admin'),
+                'label' => $this->trans('Video status', 'Modules.Advideoblock.Admin'),
                 'choices' => [
                     'OFF' => false,
                     'ON' => true

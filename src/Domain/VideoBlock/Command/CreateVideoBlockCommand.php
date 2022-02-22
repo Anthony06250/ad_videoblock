@@ -88,7 +88,7 @@ class CreateVideoBlockCommand extends AbstractVideoBlockCommand
     public function fromArray(array $data): CreateVideoBlockCommand
     {
         foreach ($data as $key => $value) {
-            if (empty($this->{$key})) {
+            if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
         }
