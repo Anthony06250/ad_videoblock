@@ -27,6 +27,7 @@ use AdVideoBlock\Grid\Action\DisableBulkAction;
 use AdVideoBlock\Grid\Action\DividerBulkAction;
 use AdVideoBlock\Grid\Action\DuplicateBulkAction;
 use AdVideoBlock\Grid\Action\EnableBulkAction;
+use AdVideoBlock\Grid\Column\VideoBlockColumn;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
@@ -37,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractFilterableGridDefinitionFactory;
@@ -81,7 +81,7 @@ final class VideoBlockGridDefinitionFactory extends AbstractFilterableGridDefini
                 ->setName($this->trans('ID', [], 'Modules.Advideoblock.Admin'))
                 ->setOptions(['field' => 'id'])
             )
-            ->add((new ImageColumn('url'))
+            ->add((new VideoBlockColumn('url'))
                 ->setName($this->trans('Video', [], 'Modules.Advideoblock.Admin'))
                 ->setOptions(['src_field' => 'url'])
             )
